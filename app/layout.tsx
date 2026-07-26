@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Alpeville",
-  description: "A clean Next.js starter template",
+  title: "Alpeville | Home",
+  description: "A Netflix-inspired home page with hero, filters, and gallery.",
 };
 
 export default function RootLayout({
