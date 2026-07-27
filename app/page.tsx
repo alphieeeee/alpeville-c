@@ -1,18 +1,33 @@
-export default function Home() {
+import { HeroBanner } from "@/components/hero-banner";
+import { GallerySection } from "@/components/gallery-section";
+import { PageShell } from "@/components/page-shell";
+import { getProjects } from "@/lib/content";
+import { filterProjects } from "@/lib/filterProjects";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Alpeville | Frontend Portfolio",
+  description:
+    "A Netflix-inspired frontend portfolio for showcasing projects to employers and clients.",
+};
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams?: Promise<{ q?: string }>;
+}) {
+  const projects = await getProjects();
+  const resolvedSearchParams = (await searchParams) ?? {};
+  const query = resolvedSearchParams.q ?? "";
+  const filtered = filterProjects(projects, query);
+  const showHero = !query.trim();
+
   return (
-    <main className="flex min-h-screen items-center justify-center px-6 py-16">
-      <section className="max-w-xl text-center">
-        <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em]">
-          New Project
-        </p>
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-          A clean Next.js starting point.
-        </h1>
-        <p className="mt-4 text-base leading-7 sm:text-lg">
-          The default demo content and extra starter styling have been removed so
-          you can build from a blank, production-ready foundation.
-        </p>
-      </section>
-    </main>
+    <PageShell>
+      {showHero ? <HeroBanner /> : null}
+      <main>
+        <GallerySection items={filtered} mode={showHero ? "slider" : "grid"} title={query ? `Results for "${query}"` : "Featured Projects"} />
+      </main>
+    </PageShell>
   );
 }
