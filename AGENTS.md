@@ -21,6 +21,9 @@ This repository contains my capstone project. The goal is to build a production-
 * Keep components focused on a single responsibility.
 * Reuse existing components and utilities whenever possible.
 * Avoid introducing unnecessary dependencies.
+* Build every feature using an API-ready architecture. Use local mock data initially, but structure the project so it can later consume data from a REST API, GraphQL API, or any headless CMS without requiring changes to the UI.
+* Test all interactive elements and ensure every button functions as expected.
+* Evaluate whether a library or plugin is appropriate for a feature before implementing it. Prefer well-maintained, widely adopted solutions over building custom implementations when they provide clear benefits.
 
 ## TypeScript
 
