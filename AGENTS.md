@@ -12,6 +12,7 @@ This repository contains my capstone project. The goal is to build a production-
 * Tailwind CSS
 * Node.js
 * Git & GitHub
+* GSAP for page transitions and motion
 
 ## Development Principles
 
