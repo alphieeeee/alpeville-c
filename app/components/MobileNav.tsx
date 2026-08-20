@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import type { NavItem } from "./navTypes";
-import { navItems } from "./navTypes";
+import type { NavItem } from "../types/navTypes";
+import { navItems } from "../types/navTypes";
 
 type MobileNavProps = {
   isOpen: boolean;

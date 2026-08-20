@@ -1,4 +1,4 @@
-import PlaceholderSection from "../components/site/PlaceholderSection";
+import PlaceholderSection from "../components/PlaceholderSection";
 
 export default function CVPage() {
   return (
