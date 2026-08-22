@@ -6,7 +6,7 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { usePathname, useRouter } from "next/navigation";
 import DesktopNav from "./DesktopNav";
 import MobileNav from "./MobileNav";
-import { navItems } from "./navTypes";
+import { navItems } from "../types/navTypes";
 
 gsap.registerPlugin(ScrollToPlugin);
 

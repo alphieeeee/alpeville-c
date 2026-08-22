@@ -1,0 +1,99 @@
+.section {
+  border-radius: 1.5rem;
+}
+
+.container {
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.heading {
+  margin-bottom: 2rem;
+}
+
+.profileRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.headshotWrap {
+  width: 100%;
+  max-width: 5.5rem;
+  flex: 0 0 5.5rem;
+}
+
+.headshotShell {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 3px solid var(--secondary);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.headshot {
+  object-fit: cover;
+  object-position: center;
+}
+
+.profileCopy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.name {
+  margin: 0;
+  font-size: 2.25rem;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.jobTitle {
+  /* margin: 0.5rem 0 0; */
+  font-size: 0.875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--secondary);
+}
+
+.bio {
+  display: grid;
+  gap: 1rem;
+}
+
+.bioPrimary {
+  margin: 0;
+  font-size: 1.06em;
+  line-height: 1.75;
+  /* color: #a5b4fc; */
+}
+
+.bioSecondary {
+  margin: 0;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+}
+
+.rightColumn {
+  min-height: 100%;
+  order: 1;
+}
+
+@media (max-width: 640px) {
+  .heading {
+    margin-bottom: 1.5rem;
+  }
+
+  .profileRow {
+    align-items: flex-start;
+  }
+
+  .headshotWrap {
+    max-width: 4.5rem;
+    flex-basis: 4.5rem;
+  }
+}

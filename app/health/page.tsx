@@ -9,9 +9,9 @@ export default async function HealthPage() {
         <p className="mb-3 text-sm font-medium uppercase tracking-[0.3em] text-secondary">
           Health Check
         </p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           API status
-        </h1>
+        </h2>
         <pre className="mt-6 overflow-x-auto rounded-2xl border border-border bg-background/80 p-4 text-sm text-foreground/80">
           {JSON.stringify(data, null, 2)}
         </pre>

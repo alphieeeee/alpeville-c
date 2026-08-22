@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import TransitionLayout from "./components/gsap/TransitionLayout";
-import Header from "./components/site/Header";
-import Animated3DBG from "./components/site/Animated3DBG";
+import Header from "./components/Header";
+import Animated3DBG from "./components/Animated3DBG";
 
 export const metadata: Metadata = {
   title: {
