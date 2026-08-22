@@ -10,12 +10,14 @@ type HeroBannerProps = {
 export default function HeroBanner({
   headshotSrc,
   name,
+  id = "home",
   className = "",
+  style,
   children,
   ...props
 }: HeroBannerProps) {
   return (
-    <section {...props} id="home" className={`${styles.hero} ${className}`.trim()}>
+    <section {...props} id={id} style={style} className={`${styles.hero} ${className}`.trim()}>
       <div className={styles.frameWrap}>
         <div className={`${styles.float} ${styles.floatSlow}`} />
         <div className={`${styles.float} ${styles.floatFast}`} />

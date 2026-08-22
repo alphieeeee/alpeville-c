@@ -2,6 +2,13 @@ import type { ExperienceItem } from "./types";
 
 const experienceData: ExperienceItem[] = [
   {
+    company: "Flyrank AI",
+    period: "2026 - present",
+    role: "AI Frontend Intern",
+    description:
+      "I'm currently completing an AI Frontend Development internship, exploring how AI can enhance modern development workflows. I'm building a foundation in prompting and context engineering, using AI-assisted development tools, completing Anthropic certifications, and applying what I learn through hands-on assignments and practical projects.",
+  },
+  {
     company: "Candy Digital",
     period: "2015 - 2019",
     role: "Senior Creative Developer",

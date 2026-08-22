@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, type RefObject } from "react";
+import { useEffect, useMemo, useRef, type ComponentPropsWithoutRef, type RefObject } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -399,11 +399,22 @@ function Scene() {
   );
 }
 
-export default function Animated3DBGv3() {
+type Animated3DBGProps = ComponentPropsWithoutRef<"div">;
+
+export default function Animated3DBGv3({
+  id,
+  className = "",
+  style,
+  children,
+  ...props
+}: Animated3DBGProps) {
   return (
     <div
+      {...props}
+      id={id}
+      style={style}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10 h-full w-full overflow-hidden bg-[#15141b]"
+      className={`pointer-events-none fixed inset-0 -z-10 h-full w-full overflow-hidden bg-[#15141b] ${className}`.trim()}
     >
       <Canvas
         dpr={[1, 1.25]}
@@ -415,6 +426,7 @@ export default function Animated3DBGv3() {
       </Canvas>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_25%,rgba(110,86,217,0.11),transparent_45%),linear-gradient(180deg,rgba(21,20,27,0.04),rgba(21,20,27,0.16)_58%,rgba(21,20,27,0.64))]" />
       <div className="absolute inset-0 opacity-[0.025] [background-image:repeating-linear-gradient(0deg,transparent,transparent_3px,#927cff_4px)]" />
+      {children}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { MouseEvent, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, MouseEvent, ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import styles from "./CtaButton.module.css";
@@ -10,9 +10,10 @@ gsap.registerPlugin(ScrollToPlugin);
 
 type CtaButtonProps = {
   href: string;
-  children: ReactNode;
   variant?: "primary" | "secondary";
   external?: boolean;
+} & Omit<ComponentPropsWithoutRef<"a">, "href" | "children"> & {
+  children: ReactNode;
 };
 
 export default function CtaButton({
@@ -20,9 +21,13 @@ export default function CtaButton({
   children,
   variant = "primary",
   external = false,
+  id,
+  className = "",
+  style,
+  ...props
 }: CtaButtonProps) {
-  const className =
-    `${styles.base} ${variant === "primary" ? styles.primary : styles.secondary}`;
+  const buttonClassName =
+    `${styles.base} ${variant === "primary" ? styles.primary : styles.secondary} ${className}`.trim();
 
   const handleScrollClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (!href.startsWith("#")) return;
@@ -44,14 +49,14 @@ export default function CtaButton({
 
   if (external) {
     return (
-      <a href={href} target="_blank" rel="noreferrer" className={className}>
+      <a {...props} href={href} id={id} style={style} target="_blank" rel="noreferrer" className={buttonClassName}>
         {children}
       </a>
     );
   }
 
   return (
-    <Link href={href} className={className} onClick={handleScrollClick}>
+    <Link {...props} href={href} id={id} style={style} className={buttonClassName} onClick={handleScrollClick}>
       {children}
     </Link>
   );
