@@ -29,7 +29,7 @@ const TransitionLayout: React.FC<TransitionLayoutProps> = ({
           <Footer />
         </div>
         <div className={`transition-overlay absolute w-full h-full top-0 left-0 z-40 pointer-events-none bg-white`}>
-          <div className={`transition-overlay absolute w-full h-full top-0 left-0 pointer-events-auto bg-white`}></div>
+          <div className={`transition-overlay absolute w-full h-full top-0 left-0 pointer-events-none bg-white`}></div>
         </div>
       </SmootherContainer>
     </>

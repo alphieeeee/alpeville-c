@@ -1,0 +1,192 @@
+.cv {
+  display: grid;
+  gap: 3rem;
+  padding: 0 0 4rem;
+}
+
+.hero {
+  display: grid;
+  gap: 2rem;
+  padding: 0 0 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.eyebrow,
+.sectionLabel {
+  margin: 0 0 0.8rem;
+  color: var(--secondary);
+  font-family: "DesignRegular", Arial, Helvetica, sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.name {
+  margin: 0;
+  font-size: var(--heading-size);
+  line-height: 0.9;
+}
+
+.role {
+  margin: 1.25rem 0 0;
+  font-family: "AvenirBlack", Arial, Helvetica, sans-serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.75rem);
+}
+
+.location,
+.muted,
+.contact a {
+  color: color-mix(in srgb, var(--foreground) 68%, transparent);
+}
+
+.location {
+  margin: 0.45rem 0 0;
+  font-size: 0.95rem;
+}
+
+.contact {
+  display: grid;
+  justify-items: start;
+  gap: 0.45rem;
+  font-size: 0.95rem;
+}
+
+.contact a {
+  transition: color 180ms ease;
+}
+
+.contact a:hover,
+.contact a:focus-visible {
+  color: var(--secondary);
+}
+
+.contentGrid {
+  display: grid;
+  gap: 3rem;
+}
+
+.primaryColumn,
+.sidebar {
+  display: grid;
+  align-content: start;
+  gap: 3rem;
+}
+
+.section {
+  min-width: 0;
+}
+
+.summary {
+  max-width: 52rem;
+  margin: 0;
+  color: color-mix(in srgb, var(--foreground) 78%, transparent);
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  line-height: 1.7;
+}
+
+.experienceList {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.experience {
+  padding-top: 1.5rem;
+  /* border-top: 1px solid var(--border); */
+}
+
+.experience h2,
+.educationTitle {
+  margin: 0;
+  font-family: "AvenirBlack", Arial, Helvetica, sans-serif;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-style: italic;
+  line-height: 1.25;
+}
+
+.company {
+  margin: 0.5rem 0 0;
+  font-family: "AvenirBlack", Arial, Helvetica, sans-serif;
+  font-size: 0.95rem;
+}
+
+.company span {
+  color: var(--secondary);
+  padding: 0 0.35rem;
+}
+
+.experience ul,
+.compactList {
+  display: grid;
+  gap: 0.55rem;
+  margin: 1rem 0 0;
+  padding-left: 1.2rem;
+  color: color-mix(in srgb, var(--foreground) 72%, transparent);
+  line-height: 1.55;
+}
+
+.experience li::marker,
+.compactList li::marker {
+  color: var(--secondary);
+}
+
+.skills {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0;
+}
+
+.skills div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.skills dt {
+  font-family: "AvenirBlack", Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.skills dd {
+  margin: 0;
+  color: color-mix(in srgb, var(--foreground) 68%, transparent);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.compactList {
+  margin-top: 0;
+}
+
+.educationTitle {
+  font-style: normal;
+}
+
+.muted {
+  margin: 0.55rem 0 0;
+  line-height: 1.55;
+}
+
+.experienceBullets {
+  list-style: initial;
+}
+
+.compactList {
+  list-style: initial;
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) minmax(13rem, 0.45fr);
+    align-items: end;
+  }
+
+  .contact {
+    justify-items: end;
+    text-align: right;
+  }
+
+  .contentGrid {
+    grid-template-columns: minmax(0, 1.55fr) minmax(15rem, 0.7fr);
+    gap: 4rem;
+  }
+}
