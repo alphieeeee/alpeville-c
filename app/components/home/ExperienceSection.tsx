@@ -16,11 +16,12 @@ export default function ExperienceSection({
   experienceData,
   id,
   className = "",
+  style,
   children,
   ...props
 }: ExperienceSectionProps) {
   return (
-    <section {...props} id={id} className={`${className}`.trim()}>
+    <section {...props} id={id} style={style} className={`${className}`.trim()}>
       <SectionHeading title="Experience" />
 
       <div className="mt-8 grid gap-4">
@@ -38,4 +39,3 @@ export default function ExperienceSection({
     </section>
   );
 }
-

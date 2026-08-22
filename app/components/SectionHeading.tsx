@@ -11,12 +11,14 @@ export default function SectionHeading({
   eyebrow,
   title,
   description,
+  id,
   className = "",
   children,
+  style,
   ...props
 }: SectionHeadingProps) {
   return (
-    <div {...props} className={`${styles.wrap} ${className}`.trim()}>
+    <div {...props} id={id} style={style} className={`${styles.wrap} ${className}`.trim()}>
       {eyebrow ? (
         <p className={styles.eyebrow}>{eyebrow}</p>
       ) : null}

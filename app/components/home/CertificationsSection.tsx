@@ -17,11 +17,12 @@ export default function CertificationsSection({
   certificationsData,
   id,
   className = "",
+  style,
   children,
   ...props
 }: CertificationsSectionProps) {
   return (
-    <section {...props} id={id} className={`${className}`.trim()}>
+    <section {...props} id={id} style={style} className={`${className}`.trim()}>
       <SectionHeading title="Certifications" />
 
       <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -43,4 +44,3 @@ export default function CertificationsSection({
     </section>
   );
 }
-

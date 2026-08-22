@@ -8,6 +8,7 @@
   --surface: #232228;
   --surface-soft: #2a2930;
   --border: rgba(255, 255, 255, 0.08);
+  --heading-size: clamp(2.75rem, 8vw, 5.125rem);
 }
 
 @theme inline {
@@ -104,8 +105,8 @@ header {
 .glass-shell {
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.09),
-    rgba(255, 255, 255, 0.03)
+    rgba(12, 12, 18, 0.94),
+    rgba(18, 17, 24, 0.86)
   );
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(20px);
@@ -125,7 +126,7 @@ header {
   /* backdrop-filter: blur(18px); */
   /* -webkit-backdrop-filter: blur(18px); */
   box-shadow:
-    0 10px 28px rgba(0, 0, 0, 0.14),
+    0 10px 28px rgba(0, 0, 0, 0.30),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 

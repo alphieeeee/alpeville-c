@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ComponentPropsWithoutRef } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { usePathname, useRouter } from "next/navigation";
@@ -32,7 +32,15 @@ function useLockBodyScroll(locked: boolean) {
   }, [locked]);
 }
 
-export default function Header() {
+type HeaderProps = ComponentPropsWithoutRef<"header">;
+
+export default function Header({
+  id = "header",
+  className = "",
+  style,
+  children,
+  ...props
+}: HeaderProps) {
   const isScrolled = useHeaderScrollState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("#about");
@@ -108,12 +116,14 @@ export default function Header() {
 
   return (
     <header
-      id="header"
+      {...props}
+      id={id}
+      style={style}
       className={`fixed top-0 w-full z-50 ${
         isScrolled
           ? "glass-shell bg-background/55 shadow-[0_16px_48px_rgba(0,0,0,0.22)]"
           : ""
-      }`}
+      } ${className}`.trim()}
     >
       <div className="mx-auto flex max-w-7xl items-center px-4 py-4 sm:px-6 lg:px-8">
         <DesktopNav
@@ -127,6 +137,7 @@ export default function Header() {
           onNavigate={(item) => handleNavigate(navItems.indexOf(item))}
         />
       </div>
+      {children}
     </header>
   );
 }

@@ -7,15 +7,15 @@
   margin: 0;
   color: var(--secondary);
   font-family: "DesignRegular", Arial, Helvetica, sans-serif;
-  font-size: 42px;
   letter-spacing: 0.26em;
   text-transform: uppercase;
+  font-size: clamp(1.125rem, 4vw, 2.625rem);
 }
 
 .name {
   max-width: 52rem;
   margin: 0.45rem 0 0;
-  font-size: 82px;
+  font-size: var(--heading-size);
   line-height: 0.93;
   letter-spacing: -0.05em;
   text-wrap: balance;

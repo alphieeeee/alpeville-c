@@ -29,7 +29,7 @@ export default function AboutSection({
     <section {...props} id={id} style={style} className={`${styles.section} ${className}`.trim()}>
       <SectionHeading title="About" className={styles.heading} />
 
-      <div className={`${styles.container} grid gap-8 grid-cols-1 glass-surface`}>
+      <div className={`${styles.container} grid gap-8 grid-cols-1`}>
         <div className={`grid gap-8`}>
           <div className={styles.profileRow}>
             <div className={styles.headshotWrap}>
@@ -63,6 +63,8 @@ export default function AboutSection({
           />
         </div>
       </div>
+
+      {children}
     </section>
   );
 }

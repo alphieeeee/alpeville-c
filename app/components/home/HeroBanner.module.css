@@ -38,7 +38,7 @@
 
 .name {
   margin: 0 0 0.5rem;
-  font-size: clamp(2.1rem, 5vw, 5.2rem);
+  font-size: var(--heading-size);
   line-height: 0.95;
   letter-spacing: -0.04em;
 }

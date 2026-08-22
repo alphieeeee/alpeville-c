@@ -7,7 +7,7 @@ const heroData: HomeHeroData = {
   ctas: [
     { href: "#work", label: "View Project" },
     { href: "/cv", label: "My CV", variant: "secondary" },
-    { href: "mailto:hello@alpeville.com", label: "Email Me", variant: "secondary" },
+    { href: "mailto:alpsgega@gmail.com", label: "Email Me", variant: "secondary" },
   ],
 };
 

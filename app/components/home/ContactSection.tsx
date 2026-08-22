@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import CtaButton from "../CtaButton";
 import SectionHeading from "../SectionHeading";
+import styles from "./ContactSection.module.css";
 
 type ContactSectionBaseProps = ComponentPropsWithoutRef<"section">;
 
@@ -13,11 +14,12 @@ type ContactSectionProps = {
 export default function ContactSection({
   id,
   className = "",
+  style,
   children,
   ...props
 }: ContactSectionProps) {
   return (
-    <section {...props} id={id} className={`${className}`.trim()}>
+    <section {...props} id={id} style={style} className={`${className}`.trim()}>
       <SectionHeading title="Contact" />
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.3fr_0.7fr] lg:items-end">
@@ -26,7 +28,7 @@ export default function ContactSection({
             I’m available for frontend, creative development, and motion-led web projects. This block is intentionally simple so it can later bind to contactEmail and socialLinks from Strapi.
           </p>
           <div className="flex flex-wrap gap-3">
-            <CtaButton href="mailto:hello@alpeville.com">Email Me</CtaButton>
+            <CtaButton href="mailto:alpsgega@gmail.com">Email Me</CtaButton>
             <CtaButton href="/cv" variant="secondary">
               View CV
             </CtaButton>
@@ -34,11 +36,11 @@ export default function ContactSection({
         </div>
 
         <div className="grid gap-3">
-          <div className="rounded-3xl border border-border bg-white/5 p-5">
+          <div className={`${styles.contactCard} glass-surface`}>
             <p className="text-xs uppercase tracking-[0.28em] text-secondary">Email</p>
-            <p className="mt-2 text-lg">hello@alpeville.com</p>
+            <p className="mt-2 text-lg">alpsgega@gmail.com</p>
           </div>
-          <div className="rounded-3xl border border-border bg-white/5 p-5">
+          <div className={`${styles.contactCard} glass-surface`}>
             <p className="text-xs uppercase tracking-[0.28em] text-secondary">Availability</p>
             <p className="mt-2 text-lg">Open for select freelance and full-time roles</p>
           </div>
@@ -49,4 +51,3 @@ export default function ContactSection({
     </section>
   );
 }
-

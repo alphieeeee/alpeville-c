@@ -23,41 +23,35 @@ export default function Home() {
   const experienceData = getExperienceData();
 
   return (
-    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-4 sm:px-6 lg:px-8">
+    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
       <HomeHero id="home" heroData={heroData} />
       <AboutSection
         id="about"
         aboutData={aboutData}
-        className="rounded-3xl p-8 sm:p-10"
       />
 
       <WhatIDoSection
         id="what-i-do"
         whatIdoData={whatIdoData}
-        className="rounded-3xl p-8 sm:p-10"
       />
 
       <WorkSection
         id="work"
         workData={workData}
-        className="rounded-3xl p-8 sm:p-10"
       />
 
       <CertificationsSection
         id="certifications"
         certificationsData={certificationsData}
-        className="rounded-3xl p-8 sm:p-10"
       />
 
       <ExperienceSection
         id="experience"
         experienceData={experienceData}
-        className="rounded-3xl p-8 sm:p-10"
       />
 
       <ContactSection
         id="contact"
-        className="rounded-3xl p-8 sm:p-10"
       />
 
       <div className="flex justify-start">

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 import styles from "./ContentCard.module.css";
 
 type ContentCardProps = {
@@ -6,20 +6,21 @@ type ContentCardProps = {
   description: string;
   meta?: string;
   tags?: string[];
-  className?: string;
-  children?: ReactNode;
-};
+} & ComponentPropsWithoutRef<"article">;
 
 export default function ContentCard({
   title,
   description,
   meta,
   tags,
+  id,
   className = "",
+  style,
   children,
+  ...props
 }: ContentCardProps) {
   return (
-    <article className={`${styles.card} glass-surface ${className}`}>
+    <article {...props} id={id} style={style} className={`${styles.card} glass-surface ${className}`.trim()}>
       {meta ? (
         <p className={styles.meta}>
           {meta}

@@ -18,12 +18,14 @@ type WhatIDoSectionProps = {
 export default function WhatIDoSection({
   whatIdoData,
   title = "What I Do",
+  id,
   className = "",
+  style,
   children,
   ...props
 }: WhatIDoSectionProps) {
   return (
-    <section {...props} className={`${styles.section} ${className}`.trim()}>
+    <section {...props} id={id} style={style} className={`${styles.section} ${className}`.trim()}>
       <SectionHeading title={title} />
 
       <div className="mt-8 grid gap-4 lg:grid-cols-1">
