@@ -1,0 +1,42 @@
+.root {
+  position: fixed;
+  /* top: 15px; */
+  right: clamp(0.7rem, 2vw, 1.5rem);
+  bottom: 5vh;
+  z-index: 20;
+  width: 2px;
+  height: 40vh;
+  pointer-events: none;
+  /* overflow: hidden; */
+}
+
+.track {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  width: 2px;
+  background: rgba(244, 247, 251, 0.18);
+}
+
+:global(.scroll-progress-barv) {
+  position: absolute;
+  inset: 0;
+  width: 2px;
+  background: var(--secondary);
+  transform: scaleY(0);
+  transform-origin: 50% 0%;
+  box-shadow: 0 0 0.45rem color-mix(in srgb, var(--secondary) 65%, transparent);
+}
+
+:global(.knob) {
+  position: absolute;
+  top: 0;
+  left: 1px;
+  width: 0.42rem;
+  height: 0.42rem;
+  border: 1px solid var(--secondary);
+  border-radius: 999px;
+  background: var(--background);
+  box-shadow: 0 0 0.45rem color-mix(in srgb, var(--secondary) 75%, transparent);
+  transform: translate(-50%, -50%);
+}
