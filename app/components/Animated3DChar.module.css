@@ -1,0 +1,28 @@
+.canvasContainer {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.canvas {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  filter: drop-shadow(0 1.5rem 2rem rgba(0, 0, 0, 0.28));
+}
+
+@media (max-width: 639px) {
+  .canvas {
+    opacity: 0.92;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas {
+    filter: none;
+  }
+}
