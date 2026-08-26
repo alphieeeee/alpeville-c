@@ -28,7 +28,7 @@ export default function HomeHero({
       {...props}
       id={id}
       style={style}
-      className={`${styles.hero} flex flex-col items-center justify-between p-8 sm:p-10 ${className}`.trim()}
+      className={`${styles.hero} flex flex-col items-center justify-between py-8 sm:p-10 ${className}`.trim()}
     >
       <div className={`${styles.layout} w-full grow flex items-center justify-center lg:justify-start`}>
         <div className={`${styles.copy} text-center lg:text-left`}>
