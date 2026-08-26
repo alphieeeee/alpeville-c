@@ -71,10 +71,10 @@ export default function MobileNav({
         <button
           type="button"
           aria-label="Close navigation menu"
-          className="absolute inset-0 bg-background/45 backdrop-blur-xl"
+          className="fixed inset-0 bg-background/45 backdrop-blur-xl"
           onClick={onToggle}
         />
-        <div className="absolute inset-0 flex items-center justify-center px-6">
+        <div className="fixed inset-0 flex items-center justify-center px-6">
           <nav
             aria-label="Mobile primary"
             className="glass-shell flex w-full max-w-sm flex-col items-center gap-4 rounded-[2rem] p-8 text-center"
