@@ -1,15 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import type { NavItem } from "./navTypes";
-import { navItems } from "./navTypes";
+import type { ComponentPropsWithoutRef } from "react";
+import type { NavItem } from "../types/navTypes";
+import { navItems } from "../types/navTypes";
 
 type DesktopNavProps = {
   onNavigate: (item: NavItem) => void;
   activeHref: string;
-};
+} & ComponentPropsWithoutRef<"div">;
 
-export default function DesktopNav({ onNavigate, activeHref }: DesktopNavProps) {
+export default function DesktopNav({
+  onNavigate,
+  activeHref,
+  id,
+  className = "",
+  style,
+  children,
+  ...props
+}: DesktopNavProps) {
   const logo = (
     <Link
       href="/"
@@ -22,7 +31,7 @@ export default function DesktopNav({ onNavigate, activeHref }: DesktopNavProps) 
   );
 
   return (
-    <div className="hidden w-full items-center justify-between lg:flex">
+    <div {...props} id={id} style={style} className={`hidden w-full items-center justify-between lg:flex ${className}`.trim()}>
       {logo}
 
       <nav aria-label="Primary" className="flex items-center gap-5 text-sm">
@@ -41,6 +50,7 @@ export default function DesktopNav({ onNavigate, activeHref }: DesktopNavProps) 
           </button>
         ))}
       </nav>
+      {children}
     </div>
   );
 }

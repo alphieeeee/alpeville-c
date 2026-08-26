@@ -1,0 +1,53 @@
+.section {
+  border-radius: 1.5rem;
+}
+
+.card {
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+}
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+.number {
+  color: var(--secondary);
+  font-family: "AvenirBlack", Arial, Helvetica, sans-serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.8vw, 1.75rem);
+  line-height: 1.15;
+  font-weight: 400;
+}
+
+.description {
+  margin: 1rem 0 0;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+  /* color: rgba(244, 247, 251, 0.75); */
+}
+
+.skills {
+  margin: 1.2rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  list-style: none;
+  padding: 0;
+}
+
+.skill {
+  border: 1px solid var(--secondary);
+  /* color: var(--secondary); */
+  border-radius: 9999px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1;
+}

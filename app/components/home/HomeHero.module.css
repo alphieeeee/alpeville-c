@@ -1,0 +1,76 @@
+.hero {
+  height: 88vh;
+  height: 88dvh;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--secondary);
+  font-family: "DesignRegular", Arial, Helvetica, sans-serif;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  font-size: clamp(1.125rem, 4vw, 2.625rem);
+}
+
+.name {
+  max-width: 52rem;
+  margin: 0.45rem 0 0;
+  font-size: var(--heading-size);
+  line-height: 0.93;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+.lead {
+  margin: 1rem 0 0;
+  font-size: 24px;
+  line-height: 1.16;
+  text-wrap: balance;
+}
+
+.actions {
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+
+.scrollIndicator {
+  margin-top: clamp(1.2rem, 3vw, 1.75rem);
+  color: rgba(244, 247, 251, 0.68);
+}
+
+.scrollText {
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.scrollLine {
+  width: 1px;
+  height: 2.5rem;
+  background: linear-gradient(180deg, var(--secondary), transparent);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translateY(0.25rem);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 639px) {
+  .name {
+    max-width: 100%;
+  }
+  .actions {
+    gap: 0.6rem;
+  }
+
+  .scrollLine {
+    height: 2rem;
+  }
+}

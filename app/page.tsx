@@ -1,58 +1,63 @@
-import PlaceholderSection from "./components/site/PlaceholderSection";
+import CtaButton from "./components/CtaButton";
+import AboutSection from "./components/home/AboutSection";
+import CertificationsSection from "./components/home/CertificationsSection";
+import ContactSection from "./components/home/ContactSection";
+import ExperienceSection from "./components/home/ExperienceSection";
+import HomeHero from "./components/home/HomeHero";
+import WorkSection from "./components/home/WorkSection";
+import WhatIDoSection from "./components/home/WhatIDoSection";
 
-const homeSections = [
-  {
-    id: "about",
-    title: "About",
-    description: "About section placeholder for the single-page portfolio home.",
-  },
-  {
-    id: "work",
-    title: "Work",
-    description: "Work gallery placeholder for future Strapi project cards.",
-  },
-  {
-    id: "certifications",
-    title: "Certifications",
-    description: "Certifications section placeholder for future credential data.",
-  },
-  {
-    id: "experience",
-    title: "Experience",
-    description: "Experience section placeholder for timeline content.",
-  },
-  {
-    id: "contact",
-    title: "Contact",
-    description: "Contact section placeholder for email and social links.",
-  },
-];
+import { getHomeHeroData } from "../lib/api/home/service";
+import { getAboutData } from "../lib/api/about/service";
+import { getWhatIdoData } from "../lib/api/whatido/service";
+import { getCertificationsData } from "../lib/api/certifications/service";
+import { getExperienceData } from "../lib/api/experience/service";
+import { getWorkData } from "../lib/api/work/service";
 
 export default function Home() {
-  return (
-    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-4 sm:px-6 lg:px-8">
-      <section className="glass-surface min-h-[85vh] min-h-[85dvh] flex flex-col justify-center rounded-3xl p-10">
-        <p className="text-sm font-medium uppercase tracking-[0.3em] text-secondary">
-          Portfolio Skeleton
-        </p>
-        <h1 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">
-          A deploy-ready shell for the 3D portfolio.
-        </h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-foreground/75">
-          This scaffold keeps the GSAP setup intact, adds the route structure,
-          and prepares the app for Strapi-driven content later.
-        </p>
-      </section>
+  const heroData = getHomeHeroData();
+  const aboutData = getAboutData();
+  const whatIdoData = getWhatIdoData();
+  const workData = getWorkData();
+  const certificationsData = getCertificationsData();
+  const experienceData = getExperienceData();
 
-      <div className="grid gap-6">
-        {homeSections.map((section) => (
-          <div key={section.id} id={section.id}>
-            <PlaceholderSection
-              title={section.title}
-              description={section.description}
-            />
-          </div>
-        ))}
+  return (
+    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
+      <HomeHero id="home" heroData={heroData} />
+      <AboutSection
+        id="about"
+        aboutData={aboutData}
+      />
+
+      <WhatIDoSection
+        id="what-i-do"
+        whatIdoData={whatIdoData}
+      />
+
+      <WorkSection
+        id="work"
+        workData={workData}
+      />
+
+      <CertificationsSection
+        id="certifications"
+        certificationsData={certificationsData}
+      />
+
+      <ExperienceSection
+        id="experience"
+        experienceData={experienceData}
+      />
+
+      <ContactSection
+        id="contact"
+      />
+
+      <div className="flex justify-start">
+        <CtaButton href="#home" variant="secondary">
+          Back to Top
+        </CtaButton>
       </div>
     </main>
   );

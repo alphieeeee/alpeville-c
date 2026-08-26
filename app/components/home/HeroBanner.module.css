@@ -1,0 +1,149 @@
+.hero {
+  overflow: hidden;
+  border-radius: 2rem;
+}
+
+.frameWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1337 / 433;
+}
+
+.frame {
+  animation: frameFloat 8s ease-in-out infinite;
+  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.28));
+}
+
+.content {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+}
+
+.copy {
+  padding: 0 2rem 0 0;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--secondary);
+  font-family: "DesignRegular", Arial, Helvetica, sans-serif;
+  font-size: clamp(1rem, 1.8vw, 2rem);
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.name {
+  margin: 0 0 0.5rem;
+  font-size: var(--heading-size);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.lead {
+  max-width: 100%;
+  white-space: nowrap;
+  font-size: clamp(0.92rem, 1.55vw, 1.35rem);
+  line-height: 1.2;
+  color: rgba(244, 247, 251, 0.82);
+}
+
+.portraitShell {
+  position: relative;
+  height: 100%;
+}
+
+.portraitFloat {
+  position: absolute;
+  top: 8.5%;
+  left: 4.5%;
+  width: 81%;
+  aspect-ratio: 1;
+  animation: portraitFloat 6s ease-in-out infinite;
+}
+
+.portraitMask {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.portrait {
+  object-fit: cover;
+}
+
+.float {
+  pointer-events: none;
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(26px);
+  opacity: 0.75;
+}
+
+.floatSlow {
+  left: 8%;
+  top: 16%;
+  height: 7rem;
+  width: 7rem;
+  background: rgba(46, 202, 237, 0.18);
+  animation: glowSlow 10s ease-in-out infinite;
+}
+
+.floatFast {
+  right: 10%;
+  bottom: 14%;
+  height: 9rem;
+  width: 9rem;
+  background: rgba(20, 118, 201, 0.18);
+  animation: glowFast 7s ease-in-out infinite;
+}
+
+@keyframes frameFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -0.35rem, 0) scale(1.01);
+  }
+}
+
+@keyframes portraitFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -0.55rem, 0);
+  }
+}
+
+@keyframes glowSlow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0.75rem, -0.5rem, 0) scale(1.12);
+  }
+}
+
+@keyframes glowFast {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-0.6rem, 0.4rem, 0) scale(1.08);
+  }
+}

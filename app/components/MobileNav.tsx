@@ -1,24 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import type { NavItem } from "./navTypes";
-import { navItems } from "./navTypes";
+import type { ComponentPropsWithoutRef } from "react";
+import type { NavItem } from "../types/navTypes";
+import { navItems } from "../types/navTypes";
 
 type MobileNavProps = {
   isOpen: boolean;
   onToggle: () => void;
   onNavigate: (item: NavItem) => void;
   activeHref: string;
-};
+} & ComponentPropsWithoutRef<"div">;
 
 export default function MobileNav({
   isOpen,
   onToggle,
   onNavigate,
   activeHref,
+  id,
+  className = "",
+  style,
+  children,
+  ...props
 }: MobileNavProps) {
   return (
-    <div className="flex w-full items-center justify-between lg:hidden">
+    <div {...props} id={id} style={style} className={`flex w-full items-center justify-between lg:hidden ${className}`.trim()}>
       <Link
         href="/"
         className={`text-lg font-semibold tracking-[0.28em] uppercase transition-colors hover:text-secondary ${
@@ -90,6 +96,7 @@ export default function MobileNav({
           </nav>
         </div>
       </div>
+      {children}
     </div>
   );
 }

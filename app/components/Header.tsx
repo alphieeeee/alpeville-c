@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ComponentPropsWithoutRef } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { usePathname, useRouter } from "next/navigation";
 import DesktopNav from "./DesktopNav";
 import MobileNav from "./MobileNav";
-import { navItems } from "./navTypes";
+import { navItems } from "../types/navTypes";
 
-gsap.registerPlugin(ScrollToPlugin);
+gsap.registerPlugin(ScrollToPlugin, ScrollSmoother);
 
 function useHeaderScrollState() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -32,7 +33,15 @@ function useLockBodyScroll(locked: boolean) {
   }, [locked]);
 }
 
-export default function Header() {
+type HeaderProps = ComponentPropsWithoutRef<"header">;
+
+export default function Header({
+  id = "header",
+  className = "",
+  style,
+  children,
+  ...props
+}: HeaderProps) {
   const isScrolled = useHeaderScrollState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("#about");
@@ -76,13 +85,20 @@ export default function Header() {
   }, [pathname]);
 
   const goToSection = (target: string, index: number, navLength: number) => {
-    const activeNav = (window as Window & { __navIndex?: number }).__navIndex;
-    if (activeNav === index) return;
+    const targetElement = document.getElementById(target);
+    if (!targetElement) return;
 
     const headerHeight =
       index === navLength ? 0 : document.querySelector<HTMLElement>("#header-divider")?.clientHeight ?? 0;
 
-    (window as Window & { __navIndex?: number }).__navIndex = index;
+    const smoother = ScrollSmoother.get();
+    if (smoother) {
+      const destination =
+        targetElement.getBoundingClientRect().top + smoother.scrollTop() - headerHeight;
+      smoother.scrollTo(destination, true);
+      return;
+    }
+
     gsap.to(window, {
       duration: 0.1,
       scrollTo: {
@@ -93,13 +109,39 @@ export default function Header() {
     });
   };
 
+  useEffect(() => {
+    if (pathname !== "/") return;
+
+    const target = window.location.hash.slice(1);
+    if (!target) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      const itemIndex = navItems.findIndex((item) => item.target === target);
+      setActiveSection(`#${target}`);
+      goToSection(target, itemIndex, navItems.length);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [pathname]);
+
   const handleNavigate = (itemIndex: number) => {
     const item = navItems[itemIndex];
     setIsMenuOpen(false);
 
-    if (item.isSection && pathname === "/") {
+    if (item.isSection && item.target) {
+      const targetHref = `/#${item.target}`;
+
+      if (pathname !== "/") {
+        window.location.assign(targetHref);
+        return;
+      }
+
+      if (window.location.hash !== `#${item.target}`) {
+        window.history.pushState(null, "", targetHref);
+      }
+
       setActiveSection(`#${item.target}`);
-      goToSection(item.target ?? "", itemIndex, navItems.length);
+      goToSection(item.target, itemIndex, navItems.length);
       return;
     }
 
@@ -108,12 +150,14 @@ export default function Header() {
 
   return (
     <header
-      id="header"
+      {...props}
+      id={id}
+      style={style}
       className={`fixed top-0 w-full z-50 ${
         isScrolled
           ? "glass-shell bg-background/55 shadow-[0_16px_48px_rgba(0,0,0,0.22)]"
           : ""
-      }`}
+      } ${className}`.trim()}
     >
       <div className="mx-auto flex max-w-7xl items-center px-4 py-4 sm:px-6 lg:px-8">
         <DesktopNav
@@ -127,6 +171,7 @@ export default function Header() {
           onNavigate={(item) => handleNavigate(navItems.indexOf(item))}
         />
       </div>
+      {children}
     </header>
   );
 }

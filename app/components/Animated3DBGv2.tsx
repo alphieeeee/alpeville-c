@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, type ComponentPropsWithoutRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -381,11 +381,22 @@ function Scene() {
   );
 }
 
-export default function Animated3DBGv2() {
+type Animated3DBGv2Props = ComponentPropsWithoutRef<"div">;
+
+export default function Animated3DBGv2({
+  id,
+  className = "",
+  style,
+  children,
+  ...props
+}: Animated3DBGv2Props) {
   return (
     <div
+      {...props}
+      id={id}
+      style={style}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10 h-full w-full overflow-hidden bg-[#1a191d]"
+      className={`pointer-events-none fixed inset-0 -z-10 h-full w-full overflow-hidden bg-[#1a191d] ${className}`.trim()}
     >
       <Canvas
         dpr={[1, 1.25]}
@@ -398,6 +409,7 @@ export default function Animated3DBGv2() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_48%,rgba(110,86,217,0.25),transparent_32%),radial-gradient(circle_at_72%_38%,rgba(110,86,217,0.16),transparent_38%),radial-gradient(circle_at_42%_75%,rgba(46,202,237,0.055),transparent_25%),linear-gradient(90deg,rgba(110,86,217,0.14),transparent_42%,transparent_76%,rgba(110,49,111,0.1))]" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(26,25,29,0.06),rgba(26,25,29,0.24)_64%,rgba(26,25,29,0.76))]" />
       <div className="absolute inset-0 opacity-[0.045] [background-image:repeating-linear-gradient(0deg,transparent,transparent_3px,#6e56d9_4px)]" />
+      {children}
     </div>
   );
 }

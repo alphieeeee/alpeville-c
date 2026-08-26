@@ -1,4 +1,8 @@
-import PlaceholderSection from "../../components/site/PlaceholderSection";
+import { notFound } from "next/navigation";
+import CtaButton from "../../components/CtaButton";
+import WorkDetails from "../../components/work/WorkDetails";
+import WorkHero from "../../components/work/WorkHero";
+import { getWorkBySlug, getWorkData } from "../../../lib/api/work/service";
 
 type WorkPageProps = {
   params: Promise<{
@@ -6,17 +10,25 @@ type WorkPageProps = {
   }>;
 };
 
+export function generateStaticParams() {
+  return getWorkData().map((project) => ({ slug: project.slug }));
+}
+
 export default async function WorkDetailPage({ params }: WorkPageProps) {
   const { slug } = await params;
+  const project = getWorkBySlug(slug);
+
+  if (!project) notFound();
 
   return (
-    <main className="mx-auto flex w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
-      <div className="w-full">
-        <PlaceholderSection
-          title={`Work project: ${slug}`}
-          description="Project detail route placeholder for future Strapi-driven case studies and structured data."
-        />
+    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
+      <div>
+        <CtaButton href="/" variant="secondary">
+          Back
+        </CtaButton>
       </div>
+      <WorkHero project={project} />
+      <WorkDetails project={project} />
     </main>
   );
 }
