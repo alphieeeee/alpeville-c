@@ -71,13 +71,17 @@ export default function MobileNav({
         <button
           type="button"
           aria-label="Close navigation menu"
-          className="fixed inset-0 bg-background/45 backdrop-blur-xl"
+          className="fixed inset-0 bg-background/70"
           onClick={onToggle}
         />
         <div className="fixed inset-0 flex items-center justify-center px-6">
           <nav
             aria-label="Mobile primary"
-            className="glass-shell flex w-full max-w-sm flex-col items-center gap-4 rounded-[2rem] p-8 text-center"
+            className={`glass-shell flex w-full max-w-sm flex-col items-center gap-4 rounded-[2rem] p-8 text-center transition-[opacity,transform] duration-300 ease-out transform-gpu ${
+              isOpen ? "delay-300" : "delay-0"
+            } ${
+              isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
+            }`}
           >
             {navItems.map((item) => (
               <button
