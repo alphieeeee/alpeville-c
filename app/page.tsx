@@ -14,13 +14,13 @@ import { getCertificationsData } from "../lib/api/certifications/service";
 import { getExperienceData } from "../lib/api/experience/service";
 import { getWorkData } from "../lib/api/work/service";
 
-export default function Home() {
-  const heroData = getHomeHeroData();
+export default async function Home() {
+  const heroData = await getHomeHeroData();
   const aboutData = getAboutData();
   const whatIdoData = getWhatIdoData();
-  const workData = getWorkData();
-  const certificationsData = getCertificationsData();
-  const experienceData = getExperienceData();
+  const workData = await getWorkData();
+  const certificationsData = await getCertificationsData();
+  const experienceData = await getExperienceData();
 
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">

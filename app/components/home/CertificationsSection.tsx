@@ -33,9 +33,11 @@ export default function CertificationsSection({
             title={cert.name}
             description={cert.description}
           >
-            <CtaButton href={cert.link} external variant="secondary">
-              Verify Credential
-            </CtaButton>
+            {cert.link ? (
+              <CtaButton href={cert.link} external variant="secondary">
+                Verify Credential
+              </CtaButton>
+            ) : null}
           </ContentCard>
         ))}
       </div>

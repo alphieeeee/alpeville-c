@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import CtaButton from "../../components/CtaButton";
 import WorkDetails from "../../components/work/WorkDetails";
 import WorkHero from "../../components/work/WorkHero";
-import { getWorkBySlug, getWorkData } from "../../../lib/api/work/service";
+import { getWorkBySlug } from "../../../lib/api/work/service";
 
 type WorkPageProps = {
   params: Promise<{
@@ -10,13 +10,11 @@ type WorkPageProps = {
   }>;
 };
 
-export function generateStaticParams() {
-  return getWorkData().map((project) => ({ slug: project.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function WorkDetailPage({ params }: WorkPageProps) {
   const { slug } = await params;
-  const project = getWorkBySlug(slug);
+  const project = await getWorkBySlug(slug);
 
   if (!project) notFound();
 
