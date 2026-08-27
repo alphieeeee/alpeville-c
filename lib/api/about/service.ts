@@ -1,6 +1,7 @@
 import aboutData from "./mock";
-import { AboutData } from "./types";
+import type { ApiResult } from "../types/common";
+import type { AboutData } from "./types";
 
-export function getAboutData(): AboutData {
-  return aboutData;
+export function getAboutData(): ApiResult<AboutData> {
+  return { data: aboutData, error: null };
 }

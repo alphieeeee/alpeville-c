@@ -3,4 +3,3 @@ export type WhatIdoItem = {
   description: string;
   skills: string[];
 };
-
