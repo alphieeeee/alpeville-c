@@ -222,7 +222,8 @@ function getEducation(value: unknown): CvEducation[] {
   });
 }
 
-function getHero(section?: StrapiSection): CvHero {
+// Maps the CV hero section into the shape used by the page.
+function mapHero(section?: StrapiSection): CvHero {
   const fields = section ? getSectionFields(section) : {};
 
   return {
@@ -235,46 +236,94 @@ function getHero(section?: StrapiSection): CvHero {
   };
 }
 
-function mapCvData(response: StrapiCvResponse): CvData {
-  const sections = getSections(response);
-  const summarySection = getSection(sections, "blocks.cv-summary");
-  const rolesSection = getSection(sections, "blocks.roles");
-  const skillsSection = getSection(sections, "blocks.skills");
-  const highlightsSection = getSection(sections, "blocks.highlights");
-  const educationSection = getSection(sections, "blocks.education");
-  const achievementsSection = getSection(sections, "blocks.achievements");
-
-  const summaryFields = summarySection ? getSectionFields(summarySection) : {};
-  const rolesFields = rolesSection ? getSectionFields(rolesSection) : {};
-  const skillsFields = skillsSection ? getSectionFields(skillsSection) : {};
-  const highlightsFields = highlightsSection
-    ? getSectionFields(highlightsSection)
-    : {};
-  const educationFields = educationSection
-    ? getSectionFields(educationSection)
-    : {};
-  const achievementsFields = achievementsSection
-    ? getSectionFields(achievementsSection)
-    : {};
-
-  const summary = getBlocksText(summaryFields.summary);
+// Maps the summary section and converts Strapi rich text blocks into plain text.
+function mapSummary(section?: StrapiSection): Pick<CvData, "summaryLabel" | "summary"> {
+  const fields = section ? getSectionFields(section) : {};
 
   return {
-    hero: getHero(getSection(sections, "blocks.cv-hero")),
-    summaryLabel: getString(summaryFields.label) || cvMock.summaryLabel,
-    summary,
-    rolesLabel: getString(rolesFields.label) || cvMock.rolesLabel,
-    roles: getRoles(rolesFields.roles),
-    skillsLabel: getString(skillsFields.label) || cvMock.skillsLabel,
-    skills: getSkills(skillsFields.skills),
-    highlightsLabel:
-      getString(highlightsFields.label) || cvMock.highlightsLabel,
-    highlights: getStringArray(highlightsFields.highlights),
-    educationLabel: getString(educationFields.label) || cvMock.educationLabel,
-    education: getEducation(educationFields.schools),
-    achievementsLabel:
-      getString(achievementsFields.label) || cvMock.achievementsLabel,
-    achievements: getStringArray(achievementsFields.achievements),
+    summaryLabel: getString(fields.label) || cvMock.summaryLabel,
+    summary: getBlocksText(fields.summary),
+  };
+}
+
+// Maps the professional experience section into CV role items.
+function mapRoles(section?: StrapiSection): Pick<CvData, "rolesLabel" | "roles"> {
+  const fields = section ? getSectionFields(section) : {};
+
+  return {
+    rolesLabel: getString(fields.label) || cvMock.rolesLabel,
+    roles: getRoles(fields.roles),
+  };
+}
+
+// Maps the skills section into category and skill values.
+function mapSkills(section?: StrapiSection): Pick<CvData, "skillsLabel" | "skills"> {
+  const fields = section ? getSectionFields(section) : {};
+
+  return {
+    skillsLabel: getString(fields.label) || cvMock.skillsLabel,
+    skills: getSkills(fields.skills),
+  };
+}
+
+// Maps the project highlights section into a simple list of strings.
+function mapHighlights(
+  section?: StrapiSection
+): Pick<CvData, "highlightsLabel" | "highlights"> {
+  const fields = section ? getSectionFields(section) : {};
+
+  return {
+    highlightsLabel: getString(fields.label) || cvMock.highlightsLabel,
+    highlights: getStringArray(fields.highlights),
+  };
+}
+
+// Maps the education section into degree, school, and period values.
+function mapEducation(
+  section?: StrapiSection
+): Pick<CvData, "educationLabel" | "education"> {
+  const fields = section ? getSectionFields(section) : {};
+
+  return {
+    educationLabel: getString(fields.label) || cvMock.educationLabel,
+    education: getEducation(fields.schools),
+  };
+}
+
+// Maps the achievements section into a simple list of strings.
+function mapAchievements(
+  section?: StrapiSection
+): Pick<CvData, "achievementsLabel" | "achievements"> {
+  const fields = section ? getSectionFields(section) : {};
+
+  return {
+    achievementsLabel: getString(fields.label) || cvMock.achievementsLabel,
+    achievements: getStringArray(fields.achievements),
+  };
+}
+
+// Finds each dynamic-zone section and combines the mapped results into one CV object.
+function mapCvData(response: StrapiCvResponse): CvData {
+  const sections = getSections(response);
+
+  const hero = mapHero(getSection(sections, "blocks.cv-hero"));
+  const summary = mapSummary(getSection(sections, "blocks.cv-summary"));
+  const roles = mapRoles(getSection(sections, "blocks.roles"));
+  const skills = mapSkills(getSection(sections, "blocks.skills"));
+  const highlights = mapHighlights(getSection(sections, "blocks.highlights"));
+  const education = mapEducation(getSection(sections, "blocks.education"));
+  const achievements = mapAchievements(
+    getSection(sections, "blocks.achievements")
+  );
+
+  return {
+    hero,
+    ...summary,
+    ...roles,
+    ...skills,
+    ...highlights,
+    ...education,
+    ...achievements,
   };
 }
 
