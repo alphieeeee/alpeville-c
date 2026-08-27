@@ -25,9 +25,26 @@ export function createStrapiApiError(
   };
 }
 
+type StrapiCacheOptions = {
+  revalidate?: number;
+  tags?: string[];
+};
+
+export type StrapiRequestOptions = RequestInit & {
+  next?: StrapiCacheOptions;
+};
+
+function getRevalidateSeconds(): number {
+  const configuredValue = Number(process.env.STRAPI_REVALIDATE_SECONDS);
+
+  return Number.isFinite(configuredValue) && configuredValue > 0
+    ? configuredValue
+    : 900;
+}
+
 export async function fetchStrapi(
   url: string,
-  options: RequestInit = {}
+  options: StrapiRequestOptions = {}
 ): Promise<Response> {
   const headers = new Headers(options.headers);
   const apiToken = process.env.STRAPI_API_TOKEN;
@@ -36,16 +53,27 @@ export async function fetchStrapi(
     headers.set("Authorization", `Bearer ${apiToken}`);
   }
 
+  const shouldCache = options.cache !== "no-store";
+  const cacheOptions = shouldCache
+    ? {
+        cache: options.cache ?? "force-cache",
+        next: {
+          revalidate: options.next?.revalidate ?? getRevalidateSeconds(),
+          ...(options.next?.tags ? { tags: options.next.tags } : {}),
+        },
+      }
+    : {};
+
   return fetch(url, {
     ...options,
     headers,
-    cache: options.cache ?? "no-store",
+    ...cacheOptions,
   });
 }
 
 export async function fetchStrapiJson<T>(
   url: string,
-  options?: RequestInit
+  options?: StrapiRequestOptions
 ): Promise<T> {
   const response = await fetchStrapi(url, options);
 

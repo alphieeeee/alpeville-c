@@ -44,7 +44,8 @@ function mapCertification(
 export async function getCertificationsData(): Promise<ApiResult<CertificationItem[]>> {
   try {
     const response = await fetchStrapiJson<StrapiCertificationsResponse>(
-      strapiEndpoints.certifications
+      strapiEndpoints.certifications,
+      { next: { tags: ["strapi:certifications"] } }
     );
 
     return { data: response.data.map(mapCertification), error: null };

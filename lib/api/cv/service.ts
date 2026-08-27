@@ -353,7 +353,8 @@ export async function getCvData(): Promise<ApiResult<CvData>> {
     }
 
     const response = await fetchStrapiJson<StrapiCvResponse>(
-      strapiEndpoints.cvPage
+      strapiEndpoints.cvPage,
+      { next: { tags: ["strapi:cv"] } }
     );
 
     return { data: mapCvData(response), error: null };

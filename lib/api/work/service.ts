@@ -109,7 +109,8 @@ function mapWork(work: StrapiWorkEntry): WorkCard {
 export async function getWorkData(): Promise<ApiResult<WorkCard[]>> {
   try {
     const response = await fetchStrapiJson<StrapiWorkResponse>(
-      strapiEndpoints.works
+      strapiEndpoints.works,
+      { next: { tags: ["strapi:works"] } }
     );
 
     const works = Array.isArray(response.data)
@@ -133,7 +134,8 @@ export async function getWorkBySlug(
 ): Promise<ApiResult<WorkCard>> {
   try {
     const response = await fetchStrapiJson<StrapiWorkResponse>(
-      strapiEndpoints.workBySlug(slug)
+      strapiEndpoints.workBySlug(slug),
+      { next: { tags: ["strapi:works", `strapi:work:${slug}`] } }
     );
 
     if (!Array.isArray(response.data)) {

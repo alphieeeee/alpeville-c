@@ -51,7 +51,8 @@ function getHomeHeroFields(response: StrapiHomeHeroResponse): HomeHeroData {
 export async function getHomeHeroData(): Promise<ApiResult<HomeHeroData>> {
   try {
     const response = await fetchStrapiJson<StrapiHomeHeroResponse>(
-      strapiEndpoints.homePage
+      strapiEndpoints.homePage,
+      { next: { tags: ["strapi:home"] } }
     );
 
     return { data: getHomeHeroFields(response), error: null };

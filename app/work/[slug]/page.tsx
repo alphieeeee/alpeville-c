@@ -11,8 +11,6 @@ type WorkPageProps = {
   }>;
 };
 
-export const dynamic = "force-dynamic";
-
 export default async function WorkDetailPage({ params }: WorkPageProps) {
   const { slug } = await params;
   const result = await getWorkBySlug(slug);

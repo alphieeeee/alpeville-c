@@ -44,7 +44,8 @@ function mapExperience(
 export async function getExperienceData(): Promise<ApiResult<ExperienceItem[]>> {
   try {
     const response = await fetchStrapiJson<StrapiExperienceResponse>(
-      strapiEndpoints.experiences
+      strapiEndpoints.experiences,
+      { next: { tags: ["strapi:experiences"] } }
     );
 
     return { data: response.data.map(mapExperience), error: null };

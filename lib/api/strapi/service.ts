@@ -6,7 +6,9 @@ export async function checkStrapiHealth(): Promise<StrapiHealthResponse> {
   const url = strapiEndpoints.health;
 
   try {
-    const response = await fetchStrapi(url);
+    const response = await fetchStrapi(url, {
+      next: { revalidate: 60, tags: ["strapi:health"] },
+    });
     const payload = await response.text();
 
     return {
