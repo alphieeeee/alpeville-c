@@ -3,7 +3,7 @@ import type { CvRole } from "../../../lib/api/cv/types";
 import styles from "../../cv/page.module.css";
 
 type CvExperienceProps = {
-  label: string;
+  label?: string;
   roles: CvRole[];
   id?: string;
   className?: string;
@@ -21,7 +21,7 @@ export default function CvExperience({
 }: CvExperienceProps) {
   return (
     <section {...props} id={id} style={style} className={`${styles.section} ${className}`.trim()}>
-      <p className={styles.sectionLabel}>{label}</p>
+      {label ? <p className={styles.sectionLabel}>{label}</p> : null}
       <div className={styles.experienceList}>
         {roles.map((role) => (
           <article className={styles.experience} key={`${role.company}-${role.title}`}>

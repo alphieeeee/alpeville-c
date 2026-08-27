@@ -1,4 +1,5 @@
 import CtaButton from "../components/CtaButton";
+import ErrorState from "../components/ErrorState";
 import CvAchievements from "../components/cv/CvAchievements";
 import CvEducation from "../components/cv/CvEducation";
 import CvExperience from "../components/cv/CvExperience";
@@ -10,7 +11,22 @@ import { getCvData } from "../../lib/api/cv/service";
 import styles from "./page.module.css";
 
 export default async function CVPage() {
-  const cvData = await getCvData();
+  const { data: cvData, error } = await getCvData();
+
+  if (error || !cvData) {
+    return (
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
+        <CtaButton href="/" variant="secondary">
+          Back
+        </CtaButton>
+        <ErrorState
+          message={error?.message ?? "CV data is currently unavailable."}
+          retryHref="/cv"
+        />
+      </main>
+    );
+  }
+
   const { hero, roles, skills, highlights, education, achievements } = cvData;
 
   return (
@@ -22,22 +38,34 @@ export default async function CVPage() {
       </div>
 
       <article className={styles.cv}>
-        <CvHero hero={hero} />
+        {hero ? <CvHero hero={hero} /> : null}
 
         <div className={styles.contentGrid}>
           <div className={styles.primaryColumn}>
-            <CvSummary label={cvData.summaryLabel} summary={cvData.summary} />
-            <CvExperience label={cvData.rolesLabel} roles={roles} />
+            {cvData.summary.trim() ? (
+              <CvSummary label={cvData.summaryLabel} summary={cvData.summary} />
+            ) : null}
+            {roles.length > 0 ? (
+              <CvExperience label={cvData.rolesLabel} roles={roles} />
+            ) : null}
           </div>
 
           <aside className={styles.sidebar}>
-            <CvSkills label={cvData.skillsLabel} skills={skills} />
-            <CvHighlights label={cvData.highlightsLabel} highlights={highlights} />
-            <CvEducation label={cvData.educationLabel} education={education} />
-            <CvAchievements
-              label={cvData.achievementsLabel}
-              achievements={achievements}
-            />
+            {skills.length > 0 ? (
+              <CvSkills label={cvData.skillsLabel} skills={skills} />
+            ) : null}
+            {highlights.length > 0 ? (
+              <CvHighlights label={cvData.highlightsLabel} highlights={highlights} />
+            ) : null}
+            {education.length > 0 ? (
+              <CvEducation label={cvData.educationLabel} education={education} />
+            ) : null}
+            {achievements.length > 0 ? (
+              <CvAchievements
+                label={cvData.achievementsLabel}
+                achievements={achievements}
+              />
+            ) : null}
           </aside>
         </div>
       </article>

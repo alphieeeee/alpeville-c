@@ -1,5 +1,6 @@
-import { fetchStrapiJson } from "../strapi/client";
+import { createStrapiApiError, fetchStrapiJson } from "../strapi/client";
 import { strapiEndpoints } from "../strapi/endpoints";
+import type { ApiResult } from "../types/common";
 import type { CertificationItem } from "./types";
 
 type StrapiCertification = {
@@ -40,10 +41,20 @@ function mapCertification(
   };
 }
 
-export async function getCertificationsData(): Promise<CertificationItem[]> {
-  const response = await fetchStrapiJson<StrapiCertificationsResponse>(
-    strapiEndpoints.certifications
-  );
+export async function getCertificationsData(): Promise<ApiResult<CertificationItem[]>> {
+  try {
+    const response = await fetchStrapiJson<StrapiCertificationsResponse>(
+      strapiEndpoints.certifications
+    );
 
-  return response.data.map(mapCertification);
+    return { data: response.data.map(mapCertification), error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: createStrapiApiError(
+        error,
+        "Certifications are currently unavailable."
+      ),
+    };
+  }
 }

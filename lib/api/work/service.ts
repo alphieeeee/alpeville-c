@@ -1,6 +1,11 @@
-import { fetchStrapiJson } from "../strapi/client";
+import {
+  createStrapiApiError,
+  fetchStrapiJson,
+  StrapiRequestError,
+} from "../strapi/client";
 import { getStrapiMediaUrl } from "../strapi/media";
 import { strapiEndpoints } from "../strapi/endpoints";
+import type { ApiResult } from "../types/common";
 import type { WorkCard } from "./types";
 
 type StrapiMedia = {
@@ -101,29 +106,67 @@ function mapWork(work: StrapiWorkEntry): WorkCard {
   };
 }
 
-export async function getWorkData(): Promise<WorkCard[]> {
-  const response = await fetchStrapiJson<StrapiWorkResponse>(
-    strapiEndpoints.works
-  );
+export async function getWorkData(): Promise<ApiResult<WorkCard[]>> {
+  try {
+    const response = await fetchStrapiJson<StrapiWorkResponse>(
+      strapiEndpoints.works
+    );
 
-  const works = Array.isArray(response.data)
-    ? response.data
-    : [response.data];
+    const works = Array.isArray(response.data)
+      ? response.data
+      : [response.data];
 
-  return works.map(mapWork);
+    return { data: works.map(mapWork), error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: createStrapiApiError(
+        error,
+        "Work data is currently unavailable."
+      ),
+    };
+  }
 }
 
 export async function getWorkBySlug(
   slug: string
-): Promise<WorkCard | undefined> {
-  const response = await fetchStrapiJson<StrapiWorkResponse>(
-    strapiEndpoints.workBySlug(slug)
-  );
+): Promise<ApiResult<WorkCard>> {
+  try {
+    const response = await fetchStrapiJson<StrapiWorkResponse>(
+      strapiEndpoints.workBySlug(slug)
+    );
 
-  if (!Array.isArray(response.data)) {
-    return mapWork(response.data);
+    if (!Array.isArray(response.data)) {
+      return { data: mapWork(response.data), error: null };
+    }
+
+    const work = response.data[0];
+    return work
+      ? { data: mapWork(work), error: null }
+      : {
+          data: null,
+          error: {
+            message: "Project was not found.",
+            status: 404,
+          },
+        };
+  } catch (error) {
+    if (error instanceof StrapiRequestError && error.status === 404) {
+      return {
+        data: null,
+        error: {
+          message: "Project was not found.",
+          status: 404,
+        },
+      };
+    }
+
+    return {
+      data: null,
+      error: createStrapiApiError(
+        error,
+        "This project is currently unavailable."
+      ),
+    };
   }
-
-  const work = response.data[0];
-  return work ? mapWork(work) : undefined;
 }

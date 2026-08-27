@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
-import type { NavItem } from "../types/navTypes";
-import { navItems } from "../types/navTypes";
+import { navItems } from "../data/navigation";
+import type { NavItem } from "../types/navigation";
 
 type MobileNavProps = {
   isOpen: boolean;

@@ -1,4 +1,4 @@
-import { fetchStrapi } from "./client";
+import { createStrapiApiError, fetchStrapi } from "./client";
 import { strapiEndpoints } from "./endpoints";
 import type { StrapiHealthResponse } from "./types";
 
@@ -18,12 +18,15 @@ export async function checkStrapiHealth(): Promise<StrapiHealthResponse> {
       timestamp: new Date().toISOString(),
     };
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
+    const apiError = createStrapiApiError(
+      error,
+      "Strapi health check is currently unavailable."
+    );
 
     return {
       ok: false,
       url,
-      error: message,
+      error: apiError.message,
       timestamp: new Date().toISOString(),
     };
   }

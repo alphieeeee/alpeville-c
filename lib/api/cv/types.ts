@@ -31,7 +31,7 @@ export type CvEducation = {
 };
 
 export type CvData = {
-  hero: CvHero;
+  hero: CvHero | null;
   summaryLabel: string;
   summary: string;
   rolesLabel: string;

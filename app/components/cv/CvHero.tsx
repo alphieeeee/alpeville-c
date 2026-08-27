@@ -20,10 +20,10 @@ export default function CvHero({
   return (
     <header {...props} id={id} style={style} className={`${styles.hero} ${className}`.trim()}>
       <div>
-        <p className={styles.eyebrow}>{hero.eyebrow}</p>
-        <h1 className={styles.name}>{hero.name}</h1>
-        <p className={styles.role}>{hero.role}</p>
-        <p className={styles.location}>{hero.location}</p>
+        {hero.eyebrow ? <p className={styles.eyebrow}>{hero.eyebrow}</p> : null}
+        {hero.name ? <h1 className={styles.name}>{hero.name}</h1> : null}
+        {hero.role ? <p className={styles.role}>{hero.role}</p> : null}
+        {hero.location ? <p className={styles.location}>{hero.location}</p> : null}
       </div>
 
       <div className={styles.contact}>

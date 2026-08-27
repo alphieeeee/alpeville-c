@@ -7,7 +7,7 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { usePathname, useRouter } from "next/navigation";
 import DesktopNav from "./DesktopNav";
 import MobileNav from "./MobileNav";
-import { navItems } from "../types/navTypes";
+import { navItems } from "../data/navigation";
 
 gsap.registerPlugin(ScrollToPlugin, ScrollSmoother);
 

@@ -1,5 +1,9 @@
-import { fetchStrapiJson } from "../strapi/client";
+import {
+  createStrapiApiError,
+  fetchStrapiJson,
+} from "../strapi/client";
 import { strapiEndpoints } from "../strapi/endpoints";
+import type { ApiResult } from "../types/common";
 import type { HomeHeroCta, HomeHeroData } from "./types";
 
 type StrapiHomeHero = {
@@ -44,10 +48,20 @@ function getHomeHeroFields(response: StrapiHomeHeroResponse): HomeHeroData {
   };
 }
 
-export async function getHomeHeroData(): Promise<HomeHeroData> {
-  const response = await fetchStrapiJson<StrapiHomeHeroResponse>(
-    strapiEndpoints.homePage
-  );
+export async function getHomeHeroData(): Promise<ApiResult<HomeHeroData>> {
+  try {
+    const response = await fetchStrapiJson<StrapiHomeHeroResponse>(
+      strapiEndpoints.homePage
+    );
 
-  return getHomeHeroFields(response);
+    return { data: getHomeHeroFields(response), error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: createStrapiApiError(
+        error,
+        "Home data is currently unavailable."
+      ),
+    };
+  }
 }

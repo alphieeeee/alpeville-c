@@ -1,5 +1,6 @@
-import { fetchStrapiJson } from "../strapi/client";
+import { createStrapiApiError, fetchStrapiJson } from "../strapi/client";
 import { strapiEndpoints } from "../strapi/endpoints";
+import type { ApiResult } from "../types/common";
 import type { ExperienceItem } from "./types";
 
 type StrapiExperience = {
@@ -40,10 +41,20 @@ function mapExperience(
   };
 }
 
-export async function getExperienceData(): Promise<ExperienceItem[]> {
-  const response = await fetchStrapiJson<StrapiExperienceResponse>(
-    strapiEndpoints.experiences
-  );
+export async function getExperienceData(): Promise<ApiResult<ExperienceItem[]>> {
+  try {
+    const response = await fetchStrapiJson<StrapiExperienceResponse>(
+      strapiEndpoints.experiences
+    );
 
-  return response.data.map(mapExperience);
+    return { data: response.data.map(mapExperience), error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: createStrapiApiError(
+        error,
+        "Experience data is currently unavailable."
+      ),
+    };
+  }
 }

@@ -3,7 +3,7 @@ import type { CvEducation as CvEducationData } from "../../../lib/api/cv/types";
 import styles from "../../cv/page.module.css";
 
 type CvEducationProps = {
-  label: string;
+  label?: string;
   education: CvEducationData[];
   id?: string;
   className?: string;
@@ -21,7 +21,7 @@ export default function CvEducation({
 }: CvEducationProps) {
   return (
     <section {...props} id={id} style={style} className={`${styles.section} ${className}`.trim()}>
-      <p className={styles.sectionLabel}>{label}</p>
+      {label ? <p className={styles.sectionLabel}>{label}</p> : null}
       {education.map((item) => (
         <div key={`${item.degree}-${item.school}`}>
           <h2 className={styles.educationTitle}>{item.degree}</h2>

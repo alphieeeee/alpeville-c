@@ -1,0 +1,23 @@
+.root {
+  display: grid;
+  gap: 0.75rem;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.label {
+  margin: 0;
+  color: var(--secondary);
+  font-family: "DesignRegular", Arial, Helvetica, sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.message {
+  margin: 0;
+  color: color-mix(in srgb, var(--foreground) 78%, transparent);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}

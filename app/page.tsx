@@ -4,6 +4,8 @@ import CertificationsSection from "./components/home/CertificationsSection";
 import ContactSection from "./components/home/ContactSection";
 import ExperienceSection from "./components/home/ExperienceSection";
 import HomeHero from "./components/home/HomeHero";
+import ErrorState from "./components/ErrorState";
+import SectionError from "./components/SectionError";
 import WorkSection from "./components/home/WorkSection";
 import WhatIDoSection from "./components/home/WhatIDoSection";
 
@@ -15,40 +17,89 @@ import { getExperienceData } from "../lib/api/experience/service";
 import { getWorkData } from "../lib/api/work/service";
 
 export default async function Home() {
-  const heroData = await getHomeHeroData();
-  const aboutData = getAboutData();
-  const whatIdoData = getWhatIdoData();
-  const workData = await getWorkData();
-  const certificationsData = await getCertificationsData();
-  const experienceData = await getExperienceData();
+  const [
+    heroResult,
+    aboutResult,
+    whatIdoResult,
+    workResult,
+    certificationsResult,
+    experienceResult,
+  ] = await Promise.all([
+    getHomeHeroData(),
+    getAboutData(),
+    getWhatIdoData(),
+    getWorkData(),
+    getCertificationsData(),
+    getExperienceData(),
+  ]);
+
+  if (heroResult.error) {
+    return (
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
+        <ErrorState message={heroResult.error.message} retryHref="/" />
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
-      <HomeHero id="home" heroData={heroData} />
-      <AboutSection
-        id="about"
-        aboutData={aboutData}
-      />
+      <HomeHero id="home" heroData={heroResult.data} />
 
-      <WhatIDoSection
-        id="what-i-do"
-        whatIdoData={whatIdoData}
-      />
+      {aboutResult.data ? (
+        <AboutSection id="about" aboutData={aboutResult.data} />
+      ) : aboutResult.error ? (
+        <SectionError
+          sectionName="About"
+          message={aboutResult.error.message}
+          retryHref="/"
+        />
+      ) : null}
 
-      <WorkSection
-        id="work"
-        workData={workData}
-      />
+      {whatIdoResult.data?.length ? (
+        <WhatIDoSection id="what-i-do" whatIdoData={whatIdoResult.data} />
+      ) : whatIdoResult.error ? (
+        <SectionError
+          sectionName="What I Do"
+          message={whatIdoResult.error.message}
+          retryHref="/"
+        />
+      ) : null}
 
-      <CertificationsSection
-        id="certifications"
-        certificationsData={certificationsData}
-      />
+      {workResult.data?.length ? (
+        <WorkSection id="work" workData={workResult.data} />
+      ) : workResult.error ? (
+        <SectionError
+          sectionName="Projects"
+          message={workResult.error.message}
+          retryHref="/"
+        />
+      ) : null}
 
-      <ExperienceSection
-        id="experience"
-        experienceData={experienceData}
-      />
+      {certificationsResult.data?.length ? (
+        <CertificationsSection
+          id="certifications"
+          certificationsData={certificationsResult.data}
+        />
+      ) : certificationsResult.error ? (
+        <SectionError
+          sectionName="Certifications"
+          message={certificationsResult.error.message}
+          retryHref="/"
+        />
+      ) : null}
+
+      {experienceResult.data?.length ? (
+        <ExperienceSection
+          id="experience"
+          experienceData={experienceResult.data}
+        />
+      ) : experienceResult.error ? (
+        <SectionError
+          sectionName="Experience"
+          message={experienceResult.error.message}
+          retryHref="/"
+        />
+      ) : null}
 
       <ContactSection
         id="contact"

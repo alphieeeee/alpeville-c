@@ -1,3 +1,30 @@
+import type { ApiError } from "../types/common";
+
+export class StrapiRequestError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number
+  ) {
+    super(message);
+    this.name = "StrapiRequestError";
+  }
+}
+
+export function createStrapiApiError(
+  error: unknown,
+  userMessage: string
+): ApiError {
+  const actualError = error instanceof Error ? error : new Error("Unknown error");
+  const status = error instanceof StrapiRequestError ? error.status : 500;
+
+  console.error("[Strapi] Request failed:", actualError);
+
+  return {
+    message: userMessage,
+    status,
+  };
+}
+
 export async function fetchStrapi(
   url: string,
   options: RequestInit = {}
@@ -24,7 +51,7 @@ export async function fetchStrapiJson<T>(
 
   if (!response.ok) {
     const message = `Strapi request failed with status ${response.status}`;
-    throw new Error(message);
+    throw new StrapiRequestError(message, response.status);
   }
 
   return (await response.json()) as T;

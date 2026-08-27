@@ -1,5 +1,9 @@
-import { fetchStrapiJson } from "../strapi/client";
+import {
+  createStrapiApiError,
+  fetchStrapiJson,
+} from "../strapi/client";
 import { strapiEndpoints } from "../strapi/endpoints";
+import type { ApiResult } from "../types/common";
 import cvMock from "./mock";
 import type {
   CvData,
@@ -223,10 +227,9 @@ function getEducation(value: unknown): CvEducation[] {
 }
 
 // Maps the CV hero section into the shape used by the page.
-function mapHero(section?: StrapiSection): CvHero {
+function mapHero(section?: StrapiSection): CvHero | null {
   const fields = section ? getSectionFields(section) : {};
-
-  return {
+  const hero = {
     eyebrow: getString(fields.eyebrow),
     name: getString(fields.name),
     role: getString(fields.role),
@@ -234,6 +237,10 @@ function mapHero(section?: StrapiSection): CvHero {
     contact: getString(fields.contact),
     links: getLinks(fields.links),
   };
+
+  return hero.name || hero.role || hero.location || hero.contact || hero.links.length
+    ? hero
+    : null;
 }
 
 // Maps the summary section and converts Strapi rich text blocks into plain text.
@@ -241,7 +248,7 @@ function mapSummary(section?: StrapiSection): Pick<CvData, "summaryLabel" | "sum
   const fields = section ? getSectionFields(section) : {};
 
   return {
-    summaryLabel: getString(fields.label) || cvMock.summaryLabel,
+    summaryLabel: getString(fields.label),
     summary: getBlocksText(fields.summary),
   };
 }
@@ -251,7 +258,7 @@ function mapRoles(section?: StrapiSection): Pick<CvData, "rolesLabel" | "roles">
   const fields = section ? getSectionFields(section) : {};
 
   return {
-    rolesLabel: getString(fields.label) || cvMock.rolesLabel,
+    rolesLabel: getString(fields.label),
     roles: getRoles(fields.roles),
   };
 }
@@ -261,7 +268,7 @@ function mapSkills(section?: StrapiSection): Pick<CvData, "skillsLabel" | "skill
   const fields = section ? getSectionFields(section) : {};
 
   return {
-    skillsLabel: getString(fields.label) || cvMock.skillsLabel,
+    skillsLabel: getString(fields.label),
     skills: getSkills(fields.skills),
   };
 }
@@ -273,7 +280,7 @@ function mapHighlights(
   const fields = section ? getSectionFields(section) : {};
 
   return {
-    highlightsLabel: getString(fields.label) || cvMock.highlightsLabel,
+    highlightsLabel: getString(fields.label),
     highlights: getStringArray(fields.highlights),
   };
 }
@@ -285,7 +292,7 @@ function mapEducation(
   const fields = section ? getSectionFields(section) : {};
 
   return {
-    educationLabel: getString(fields.label) || cvMock.educationLabel,
+    educationLabel: getString(fields.label),
     education: getEducation(fields.schools),
   };
 }
@@ -297,7 +304,7 @@ function mapAchievements(
   const fields = section ? getSectionFields(section) : {};
 
   return {
-    achievementsLabel: getString(fields.label) || cvMock.achievementsLabel,
+    achievementsLabel: getString(fields.label),
     achievements: getStringArray(fields.achievements),
   };
 }
@@ -327,12 +334,38 @@ function mapCvData(response: StrapiCvResponse): CvData {
   };
 }
 
-export async function getCvData(): Promise<CvData> {
-  const response = await fetchStrapiJson<StrapiCvResponse>(
-    strapiEndpoints.cvPage
-  );
+function getCvDataSource(): "mock" | "strapi" {
+  const source = process.env.CV_DATA_SOURCE ?? "strapi";
 
-  return mapCvData(response);
+  if (source !== "mock" && source !== "strapi") {
+    throw new Error(
+      `Invalid CV_DATA_SOURCE value: ${source}. Use "mock" or "strapi".`
+    );
+  }
+
+  return source;
+}
+
+export async function getCvData(): Promise<ApiResult<CvData>> {
+  try {
+    if (getCvDataSource() === "mock") {
+      return { data: cvMock, error: null };
+    }
+
+    const response = await fetchStrapiJson<StrapiCvResponse>(
+      strapiEndpoints.cvPage
+    );
+
+    return { data: mapCvData(response), error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: createStrapiApiError(
+        error,
+        "CV data is currently unavailable."
+      ),
+    };
+  }
 }
 
 export { cvMock };

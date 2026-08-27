@@ -1,9 +1,4 @@
-export type NavItem = {
-  label: string;
-  href: string;
-  target?: string;
-  isSection?: boolean;
-};
+import type { NavItem } from "../types/navigation";
 
 export const navItems: NavItem[] = [
   { label: "Home", href: "/", target: "home", isSection: true },

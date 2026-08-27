@@ -1,14 +1,7 @@
 import type { ComponentPropsWithoutRef } from "react";
+import type { WhatIdoItem } from "../../../lib/api/whatido/types";
 import SectionHeading from "../SectionHeading";
 import styles from "./WhatIDoSection.module.css";
-
-type WhatIdoItem = {
-  title: string;
-  description: string;
-  skills: string[];
-};
-
-export type { WhatIdoItem };
 
 type WhatIDoSectionProps = {
   whatIdoData: WhatIdoItem[];

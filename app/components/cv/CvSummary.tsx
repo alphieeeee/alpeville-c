@@ -2,7 +2,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import styles from "../../cv/page.module.css";
 
 type CvSummaryProps = {
-  label: string;
+  label?: string;
   summary: string;
   id?: string;
   className?: string;
@@ -20,7 +20,7 @@ export default function CvSummary({
 }: CvSummaryProps) {
   return (
     <section {...props} id={id} style={style} className={`${styles.section} ${className}`.trim()}>
-      <p className={styles.sectionLabel}>{label}</p>
+      {label ? <p className={styles.sectionLabel}>{label}</p> : null}
       <p className={styles.summary}>{summary}</p>
       {children}
     </section>
