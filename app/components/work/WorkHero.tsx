@@ -13,7 +13,7 @@ export default function WorkHero({ project, id, className = "", style, children,
       <div className={styles.imageWrap}>
         <Image
           src={project.imgSrc}
-          alt={`${project.title} project image`}
+          alt={project.imgAlt || `${project.title} hero image`}
           fill
           priority
           sizes="(min-width: 1024px) 66vw, 100vw"

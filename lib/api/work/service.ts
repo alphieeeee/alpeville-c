@@ -10,8 +10,10 @@ import type { WorkCard } from "./types";
 
 type StrapiMedia = {
   url?: string;
+  alternativeText?: string | null;
   attributes?: {
     url?: string;
+    alternativeText?: string | null;
   };
 };
 
@@ -43,6 +45,13 @@ function getWorkFields(work: StrapiWorkEntry): StrapiWork {
 function getMediaUrl(media?: StrapiMedia | null): string {
   const url = media?.url ?? media?.attributes?.url;
   return getStrapiMediaUrl(url);
+}
+
+function getMediaAlternativeText(media?: StrapiMedia | null): string {
+  const alternativeText =
+    media?.alternativeText ?? media?.attributes?.alternativeText;
+
+  return alternativeText?.trim() ?? "";
 }
 
 // Strapi Blocks content is stored as paragraphs with text children.
@@ -99,7 +108,9 @@ function mapWork(work: StrapiWorkEntry): WorkCard {
     title: fields.title,
     type: fields.type ?? "",
     thumbSrc: getMediaUrl(fields.thumbnail),
+    thumbAlt: getMediaAlternativeText(fields.thumbnail) || undefined,
     imgSrc: getMediaUrl(fields.hero),
+    imgAlt: getMediaAlternativeText(fields.hero) || undefined,
     summary: getSummaryText(fields.summary),
     tools: getTools(fields.tools),
     link: fields.link ?? "",
