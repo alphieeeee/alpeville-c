@@ -1,7 +1,7 @@
 'use client'
 import React, { useRef } from 'react'
-import { useGSAP } from "@gsap/react";
-import { usePageTransition } from '../../../lib/gsap/usePageTransition';
+// import { useGSAP } from "@gsap/react";
+// import { usePageTransition } from '../../../lib/gsap/usePageTransition';
 import SmootherContainer from './SmootherContainer';
 import Footer from '../Footer';
 
@@ -13,11 +13,11 @@ const TransitionLayout: React.FC<TransitionLayoutProps> = ({
     children
   }) => {
     const mainContainer = useRef<HTMLDivElement>(null);
-    const { pageTransitionIn } = usePageTransition();
+    // const { pageTransitionIn } = usePageTransition();
     
-    useGSAP(() => {
-      pageTransitionIn();
-    }, { scope: mainContainer });
+    // useGSAP(() => {
+    //   pageTransitionIn();
+    // }, { scope: mainContainer });
 
   return (
     <>
@@ -28,9 +28,9 @@ const TransitionLayout: React.FC<TransitionLayoutProps> = ({
           <div id="footer-divider" aria-hidden="true" className="h-20 sm:h-18 lg:h-18" />
           <Footer />
         </div>
-        <div className={`transition-overlay absolute w-full h-full top-0 left-0 z-40 pointer-events-none bg-white`}>
+        {/* <div className={`transition-overlay absolute w-full h-full top-0 left-0 z-40 pointer-events-none bg-white`}>
           <div className={`transition-overlay absolute w-full h-full top-0 left-0 pointer-events-none bg-white`}></div>
-        </div>
+        </div> */}
       </SmootherContainer>
     </>
   )

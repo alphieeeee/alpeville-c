@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import CtaButton from "../components/CtaButton";
 import ErrorState from "../components/ErrorState";
 import CvAchievements from "../components/cv/CvAchievements";
@@ -9,6 +10,18 @@ import CvSkills from "../components/cv/CvSkills";
 import CvSummary from "../components/cv/CvSummary";
 import { getCvData } from "../../lib/api/cv/service";
 import styles from "./page.module.css";
+
+export const metadata: Metadata = {
+  title: "Curriculum Vitae",
+  description:
+    "View Alpeville's professional experience, skills, education, and achievements.",
+  openGraph: {
+    title: "Curriculum Vitae",
+    description:
+      "View Alpeville's professional experience, skills, education, and achievements.",
+    url: "/cv",
+  },
+};
 
 export default async function CVPage() {
   const { data: cvData, error } = await getCvData();
