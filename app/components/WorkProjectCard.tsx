@@ -23,10 +23,10 @@ export default function WorkProjectCard({
         className={styles.card}
         aria-label={`Explore case study: ${project.title}`}
       >
-        <div className={styles.visual} aria-hidden="true">
+        <div className={styles.visual}>
           <Image
             src={project.thumbSrc}
-            alt=""
+            alt={project.thumbAlt || `${project.title} thumb image`}
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
             className={styles.thumb}

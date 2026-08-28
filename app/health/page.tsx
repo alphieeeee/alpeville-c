@@ -1,4 +1,14 @@
+import type { Metadata } from "next";
 import { checkStrapiHealth } from "@/lib/api/strapi/service";
+
+export const metadata: Metadata = {
+  title: "Health",
+  description: "Internal API health check for the Alpeville portfolio.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function HealthPage() {
   const data = await checkStrapiHealth();
