@@ -25,7 +25,7 @@ export default function ContactSection({
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.3fr_0.7fr] lg:items-end">
         <div className="space-y-4">
           <p className="copy-base max-w-2xl text-foreground/75">
-            I’m available for frontend, creative development, and motion-led web projects. This block is intentionally simple so it can later bind to contactEmail and socialLinks from Strapi.
+            Have a project, opportunity, or idea? Let’s connect and build something worth shipping. You commit. I deliver.
           </p>
           <div className="flex flex-wrap gap-3">
             <CtaButton href="mailto:alpsgega@gmail.com">Email Me</CtaButton>
