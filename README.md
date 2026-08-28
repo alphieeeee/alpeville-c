@@ -19,6 +19,7 @@ The Next.js application is backed by a separate Strapi CMS repository. The front
 - GSAP and ScrollSmoother for motion and section navigation
 - React Three Fiber and `drei` for the 3D background
 - Strapi for portfolio content
+- Vitest and React Testing Library for unit tests
 - Railway for Strapi and PostgreSQL hosting
 - Vercel for the Next.js frontend deployment
 
@@ -116,13 +117,58 @@ Caching reduces repeated requests from Next.js to Strapi. CDN or WAF rate limiti
 ```bash
 npm run lint
 npx tsc --noEmit
+npm test
 ```
 
-Run both commands before opening a pull request. Use a production build when validating deployment-specific behavior:
+Run these checks before opening a pull request. Use a production build when validating deployment-specific behavior:
 
 ```bash
 npm run build
 ```
+
+## Testing
+
+The project uses Vitest for the test runner and React Testing Library for component tests. Unit tests run in a simulated browser environment and do not require the Strapi CMS to be running.
+
+Run the complete test suite once:
+
+```bash
+npm test
+```
+
+Run tests in watch mode while developing:
+
+```bash
+npm run test:watch
+```
+
+Run one test file or filter tests by name:
+
+```bash
+npx vitest run tests/unit/work-service.test.ts
+npx vitest run -t "maps a project"
+```
+
+Generate an HTML coverage report:
+
+```bash
+npm run test:coverage
+```
+
+Open `coverage/index.html` locally to inspect which files and lines are covered. The coverage percentage is a guide; prioritize meaningful tests for data mapping, error handling, accessibility, and important user behavior instead of aiming for 100% coverage.
+
+The current tests cover Strapi media URL formatting, safe API errors, home hero mapping, work project mapping and lookup behavior, and basic `ContentCard` rendering. Tests mock CMS requests so the suite stays fast and deterministic.
+
+Recommended checks before pushing changes:
+
+```bash
+npm test
+npm run lint
+npx tsc --noEmit
+npm run build
+```
+
+Animations, Three.js rendering, responsive layout, and full navigation flows are better candidates for future browser smoke tests rather than unit tests.
 
 ## Sitemap
 
