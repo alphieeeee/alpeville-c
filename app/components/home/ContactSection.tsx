@@ -25,7 +25,7 @@ export default function ContactSection({
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.3fr_0.7fr] lg:items-end">
         <div className="space-y-4">
           <p className="copy-base max-w-2xl text-foreground/75">
-            Have a project, opportunity, or idea? Let’s connect and build something worth shipping. You commit. I deliver.
+            Have a project, opportunity, or idea in mind? Let's connect. You bring the vision. I'll bring the code and motion.
           </p>
           <div className="flex flex-wrap gap-3">
             <CtaButton href="mailto:alpsgega@gmail.com">Email Me</CtaButton>
@@ -42,7 +42,7 @@ export default function ContactSection({
           </div>
           <div className={`${styles.contactCard} glass-surface`}>
             <p className="text-xs uppercase tracking-[0.28em] text-secondary">Availability</p>
-            <p className="mt-2 text-lg">Open for select freelance and full-time roles</p>
+            <p className="mt-2 text-lg">Open to select freelance projects and full-time opportunities.</p>
           </div>
         </div>
       </div>
