@@ -7,6 +7,9 @@ import Animated3DBG from "./components/Animated3DBG";
 // import ScrollProgressBar from "./components/ScrollProgressBar";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+  ),
   title: {
     default: "Alpeville",
     template: "%s | Alpeville",

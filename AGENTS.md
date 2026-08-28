@@ -1,140 +1,120 @@
-# Project Instructions
+# Alpeville Portfolio Instructions
 
-## Project Overview
+## Project Context
 
-This repository is for the `alpeville-c` capstone: a single-page 3D portfolio site with a GSAP-driven scrolling experience, a React Three Fiber hero scene, and a CMS-backed content model.
+This repository contains the Next.js frontend for Alps' Alpeville portfolio. It is a motion-led personal portfolio, not a generic capstone template.
 
-Build with the assumption that the site should feel polished, performant, and SEO-friendly from the start.
+The separate `alpeville-cms` repository contains the Strapi application and its content schemas. Keep frontend work in this repository unless the task explicitly includes CMS changes.
 
-## Target Stack
+## Product Structure
 
-* Next.js with the App Router
-* React
-* TypeScript
-* Tailwind CSS
-* GSAP + ScrollSmoother for section navigation and motion
-* React Three Fiber + `drei` for the 3D hero/background
-* Strapi as the CMS
-* PostgreSQL for Strapi persistence
-* Vercel for the Next.js deployment target
-* Node.js, Git, and GitHub for local development and workflow
-* Vitest + React Testing Library for unit/component testing
-* Playwright for E2E and screenshot checks
+- `/` is the single-page portfolio with Hero, About, What I Do, Projects, Certifications, Experience, and Contact sections.
+- `/cv` is the separate CV page.
+- `/work/[slug]` is the project case study route.
+- `/health` is a test and diagnostics route. Do not add it to the main navigation or sitemap.
 
-## Product Shape
+## Stack
 
-The site should follow the portfolio plan:
+- Next.js App Router
+- React and TypeScript
+- Tailwind CSS
+- GSAP and ScrollSmoother
+- React Three Fiber and `drei`
+- Strapi CMS
+- Railway for Strapi and PostgreSQL hosting
+- Vercel for frontend hosting
 
-* Home page: a single scrolling page with Hero, About, What I Do, Work, Certifications, Experience, and Contact sections
-* Project detail route: `/work/[slug]` for SEO/AEO-friendly case studies
-* CV route: a separate route, not a scroll target
+## Architecture
 
-## CMS Expectations
+- `app/components/` contains reusable UI components and local component prop types.
+- `app/data/` contains shared frontend configuration such as navigation items.
+- `app/types/` contains shared UI types such as navigation types.
+- `lib/api/[feature]/service.ts` contains data fetching and mapping for one portfolio feature.
+- `lib/api/[feature]/types.ts` contains reusable types for that feature.
+- `lib/api/types/common.ts` contains shared API result types.
+- `lib/api/strapi/` contains the shared Strapi client, endpoints, media helpers, and health service.
+- `app/sitemap.ts` generates public portfolio URLs from static routes and published work data.
+- `app/robots.ts` points crawlers to the sitemap and excludes API and diagnostic routes.
 
-When working on content-driven features, assume Strapi content types similar to the plan:
+## Content and CMS Rules
 
-* `About` single type for headline, bio, job title, headshot, skills, status, resume, email, and social links
-* `WhatIDo` single type for service cards/items
-* `Certifications` single type for credentials
-* `Experience` single type for roles and timeline entries
-* `Project` collection type for work items, slugs, descriptions, rich content, tools, URLs, thumbnails, and hero media
-* Reusable `SEO` component for metadata fields
+- Strapi schemas and components are application code in the CMS repository.
+- Portfolio entries are stored in the configured Strapi database, separately from the Git repository.
+- Treat deleting a Strapi field, content type, or component as a potentially destructive database change.
+- Back up production PostgreSQL before destructive schema work.
+- Prefer additive schema changes and content migration before removing old fields or dynamic-zone components.
+- Request the required `populate` values for Strapi relations and media.
+- Only published Strapi content should appear in public portfolio pages.
 
-Strapi relations and media are not populated by default, so remember to request `populate` in API calls.
+## Types
 
-## Development Principles
+- Keep component-only prop types inside the component that owns them.
+- Put reusable portfolio or API types in `lib/api/[feature]/types.ts`.
+- Put shared UI types in `app/types/` and shared UI data in `app/data/`.
+- Do not create a global catch-all types file.
+- Avoid exporting a type from a component merely so another component can reuse it.
+- Prefer explicit types and avoid `any`.
 
-* Write clean, readable, and maintainable code.
-* Follow the existing project architecture and coding style.
-* Prefer simple solutions over unnecessary complexity.
-* Keep components focused on a single responsibility.
-* Reuse existing components and utilities whenever possible.
-* Avoid introducing unnecessary dependencies.
-* Treat the 3D scene and animation work as performance-sensitive.
-* Lazy-load heavy client-only visuals when possible.
+## Data Fetching and Errors
 
-## TypeScript
+- Use the shared Strapi client for every Strapi request.
+- Return `ApiResult<T>` for content services so successful data and expected failures are explicit.
+- Keep technical error details in server logs and show safe messages in the UI.
+- Hide a section only when the request succeeded with empty data.
+- Show a visible section-level error when a non-critical request fails.
+- Show a full-page error for critical data such as the Home hero or CV document.
+- Use `notFound()` for a genuinely missing project slug, not for an unexpected Strapi failure.
+- Preserve unaffected sections when one Home API request fails.
 
-* Use TypeScript whenever possible.
-* Avoid using `any` unless there is no reasonable alternative.
-* Prefer explicit and descriptive types.
-* Maintain strict type safety.
+## Caching and Performance
 
-## React
+- Public Strapi reads use ISR with `STRAPI_REVALIDATE_SECONDS`, defaulting to 900 seconds.
+- Keep resource-specific cache tags when adding new Strapi requests.
+- Use `no-store` only for genuinely real-time data such as a live diagnostic check.
+- Do not add `force-dynamic` to public content pages without a clear reason.
+- A cache reduces Strapi load but does not replace CDN, WAF, or rate-limit protection.
+- Keep the 3D background and animations isolated from the static content shell.
+- Avoid adding heavy visual dependencies or large assets without a performance reason.
 
-* Use functional components.
-* Prefer React Hooks.
-* Keep components modular and reusable.
-* Extract shared logic into custom hooks when appropriate.
-* Prefer SSR-safe patterns in App Router code.
-* Keep heavy 3D or animation logic isolated from the static page shell.
+## SEO and Accessibility
 
-## Styling
+- Keep `NEXT_PUBLIC_SITE_URL` configured for production metadata and sitemap URLs.
+- Add metadata for public pages when appropriate.
+- Do not include `/health` or other diagnostics in the sitemap.
+- Provide meaningful alt text for CMS media and empty alt text for decorative images.
+- Use semantic HTML and visible keyboard focus states.
+- Preserve the active navigation state for both in-page sections and separate routes.
 
-* Use Tailwind CSS.
-* Follow a mobile-first responsive approach.
-* Use semantic HTML.
-* Consider accessibility when implementing UI.
-* Preserve a deliberate visual direction instead of defaulting to generic layouts.
+## Validation
 
-## SEO / AEO
+Run these commands after code changes:
 
-* Add page metadata through `generateMetadata()` where appropriate.
-* Include alt text for media sourced from the CMS.
-* Support structured data for `Person`, `CreativeWork`, and `BreadcrumbList` when relevant.
-* Keep project descriptions concise and answer-friendly for extraction.
+```bash
+npm run lint
+npx tsc --noEmit
+git diff --check
+```
 
-## Performance
+Run `npm run build` when validating a production deployment or route-generation change. A local build may require a running Strapi instance for CMS-backed content.
 
-* Avoid loading the 3D canvas or other heavy client-only code during the initial render unless necessary.
-* Prefer `dynamic(() => import(...), { ssr: false })` for the 3D hero if it helps first paint.
-* Keep models and textures small and optimized.
-* Do not add animation complexity that hurts mobile performance without a clear visual payoff.
+## Naming and Style
 
-## Testing
-
-Prefer the plan’s testing split:
-
-* Unit/component: Vitest + React Testing Library
-* E2E: Playwright
-* Visual regression: Playwright screenshots for key flows
-
-When adding tests, focus on critical rendering, navigation, and content display behavior.
-
-## Naming Conventions
-
-* Components: `PascalCase.tsx`
-* Hooks: `useSomething.ts`
-* Utilities: `camelCase.ts`
-* Constants: `UPPER_SNAKE_CASE`
+- Components use `PascalCase.tsx`.
+- Hooks use `useSomething.ts`.
+- Utilities use `camelCase.ts`.
+- Constants use `UPPER_SNAKE_CASE` when they are true constants.
+- Prefer small readable functions and comments only for non-obvious behavior.
+- Preserve the existing visual language and mobile-first responsive layout.
 
 ## Git Workflow
 
-Follow the Conventional Commits specification.
+Use Conventional Commits:
 
-Examples:
+```text
+feat: add project case study
+fix: handle missing Strapi media
+docs: update portfolio instructions
+refactor: simplify section data mapping
+```
 
-* `feat: add work detail route`
-* `fix: resolve api populate issue`
-* `docs: update portfolio instructions`
-* `chore: initialize cms types`
-* `refactor: simplify hero animation`
-* `test: add playright coverage`
-
-## AI Assistant Guidelines
-
-When making changes:
-
-* Understand the relevant code before making changes.
-* Preserve the existing project structure and conventions.
-* Make the smallest reasonable change that satisfies the request.
-* Explain non-obvious implementation decisions when appropriate.
-* Avoid modifying unrelated files.
-* Do not remove existing functionality unless explicitly requested.
-* Suggest improvements only when they provide clear value.
-* Ask for clarification if requirements are ambiguous instead of making assumptions.
-* When adding or changing content models, pages, SEO, or motion, align with the portfolio plan rather than inventing a different product shape.
-
-## Goal
-
-Produce a production-ready portfolio site that is maintainable, performant, SEO-friendly, and visually distinctive.
+Preserve unrelated user changes. Do not reset, delete, or overwrite work without explicit permission.
