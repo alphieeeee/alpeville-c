@@ -26,6 +26,19 @@ const cvData: CvData = {
   rolesLabel: "Professional Experience",
   roles: [
     {
+      title: "AI Frontend Intern",
+      company: "Flyrank AI",
+      dates: "2026",
+      bullets: [
+        "Explore AI-assisted development workflows for modern frontend development",
+        "Build foundational skills in prompting and context engineering",
+        "Use AI tools to support coding, research, debugging, and development workflows",
+        "Complete Anthropic certifications and structured AI learning assignments",
+        "Apply AI concepts through hands-on exercises and practical development projects",
+        "Experiment with integrating AI-assisted techniques into existing frontend workflows"
+      ],
+    },
+    {
       title: "Senior Frontend Developer",
       company: "Candy Digital",
       dates: "2019 - 2025",

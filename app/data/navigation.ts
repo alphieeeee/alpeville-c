@@ -18,5 +18,4 @@ export const navItems: NavItem[] = [
   },
   { label: "Contact", href: "/#contact", target: "contact", isSection: true },
   { label: "CV", href: "/cv" },
-  { label: "Health", href: "/health" },
 ];
