@@ -5,6 +5,7 @@ import ErrorState from "../../components/ErrorState";
 import WorkDetails from "../../components/work/WorkDetails";
 import WorkHero from "../../components/work/WorkHero";
 import { getWorkBySlug } from "../../../lib/api/work/service";
+import AnimPanning from "@/app/components/gsap/AnimPanning";
 
 type WorkPageProps = {
   params: Promise<{
@@ -90,9 +91,19 @@ export default async function WorkDetailPage({ params }: WorkPageProps) {
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
       <div>
-        <CtaButton href="/" variant="secondary">
-          Back
-        </CtaButton>
+        <AnimPanning
+          duration={0.4}
+          direction="up"
+          from={0}
+          to={0}
+          fade="in"
+          animOnce={true}
+          onScroll={false}
+        >
+          <CtaButton href="/" variant="secondary">
+            Back
+          </CtaButton>
+        </AnimPanning>
       </div>
       <WorkHero project={project} />
       <WorkDetails project={project} />
