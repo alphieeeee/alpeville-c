@@ -25,14 +25,20 @@ export default function WorkProjectCard({
         aria-label={`Explore case study: ${project.title}`}
       >
         <div className={styles.visual}>
-          <Image
-            src={project.thumbSrc}
-            alt={project.thumbAlt || `${project.title} thumb image`}
-            fill
-            sizes="(min-width: 768px) 50vw, 100vw"
-            className={styles.thumb}
-            data-speed={1.1}
-          />
+          <div className={`${styles.visualWrap} absolute w-full h-full top-0 left-0`}>
+            <div
+              className={`${styles.visualOverlay} absolute w-full h-[120%]`} 
+              data-speed="auto"
+            >
+              <Image
+                src={project.thumbSrc}
+                alt={project.thumbAlt || `${project.title} thumb image`}
+                fill
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className={styles.thumb}
+              />
+            </div>
+          </div>
           <div className={styles.copy}>
             <AnimPanning
               duration={1}
