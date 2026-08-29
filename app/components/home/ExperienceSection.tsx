@@ -2,6 +2,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import ContentCard from "../ContentCard";
 import SectionHeading from "../SectionHeading";
 import type { ExperienceItem } from "../../../lib/api/experience/types";
+import AnimPanning from "../gsap/AnimPanning";
 
 type ExperienceSectionBaseProps = ComponentPropsWithoutRef<"section">;
 
@@ -26,12 +27,22 @@ export default function ExperienceSection({
 
       <div className="mt-8 grid gap-4">
         {experienceData.map((item) => (
-          <ContentCard
-            key={`${item.company}-${item.role}`}
-            meta={`${item.company} | ${item.period}`}
-            title={item.role}
-            description={item.description}
-          />
+          <AnimPanning
+            key={`${item.role}`}
+            duration={0.8}
+            direction="up"
+            from={0}
+            to={0}
+            fade="in"
+            animOnce={true}
+          >
+            <ContentCard
+              key={`${item.company}-${item.role}`}
+              meta={`${item.company} | ${item.period}`}
+              title={item.role}
+              description={item.description}
+            />
+          </AnimPanning>
         ))}
       </div>
 

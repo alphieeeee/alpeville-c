@@ -10,6 +10,7 @@ import CvSkills from "../components/cv/CvSkills";
 import CvSummary from "../components/cv/CvSummary";
 import { getCvData } from "../../lib/api/cv/service";
 import styles from "./page.module.css";
+import AnimPanning from "../components/gsap/AnimPanning";
 
 export const metadata: Metadata = {
   title: "Curriculum Vitae",
@@ -45,11 +46,30 @@ export default async function CVPage() {
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
       <div>
-        <CtaButton href="/" variant="secondary">
-          Back
-        </CtaButton>
+        <AnimPanning
+          duration={0.4}
+          direction="up"
+          from={0}
+          to={0}
+          fade="in"
+          animOnce={true}
+          onScroll={false}
+        >
+          <CtaButton href="/" variant="secondary">
+            Back
+          </CtaButton>
+        </AnimPanning>
       </div>
-
+      <AnimPanning
+        delay={0.2}
+        duration={0.8}
+        direction="up"
+        from={0}
+        to={0}
+        fade="in"
+        animOnce={true}
+        onScroll={false}
+      >
       <article className={styles.cv}>
         {hero ? <CvHero hero={hero} /> : null}
 
@@ -82,6 +102,7 @@ export default async function CVPage() {
           </aside>
         </div>
       </article>
+      </AnimPanning>
     </main>
   );
 }

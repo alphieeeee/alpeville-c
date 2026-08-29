@@ -15,6 +15,7 @@ import { getWhatIdoData } from "../lib/api/whatido/service";
 import { getCertificationsData } from "../lib/api/certifications/service";
 import { getExperienceData } from "../lib/api/experience/service";
 import { getWorkData } from "../lib/api/work/service";
+import AnimPanning from "./components/gsap/AnimPanning";
 
 export default async function Home() {
   const [
@@ -106,9 +107,18 @@ export default async function Home() {
       />
 
       <div className="flex justify-start">
-        <CtaButton href="#home" variant="secondary">
-          Back to Top
-        </CtaButton>
+        <AnimPanning
+          duration={0.4}
+          direction="up"
+          from={25}
+          to={0}
+          fade="in"
+          animOnce={true}
+        >
+          <CtaButton href="#home" variant="secondary">
+            Back to Top
+          </CtaButton>
+        </AnimPanning>
       </div>
     </main>
   );
