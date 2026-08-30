@@ -1,26 +1,38 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { Text, useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import styles from "./Animated3DChar.module.css";
+import PortfolioAssistant from "./PortfolioAssistant";
 
 const GHOST_ASSET = "/assets/ghost.glb";
 
-function GhostModel({
+function GhostAsset({
   moving,
   scrollProgress,
+  onOpenAssistant,
+  scene,
 }: {
   moving: boolean;
   scrollProgress: number;
+  onOpenAssistant: () => void;
+  scene: THREE.Group;
 }) {
   const groupRef = useRef<THREE.Group>(null);
-  const { scene } = useGLTF(GHOST_ASSET);
   const { viewport } = useThree();
   const targetMoving = useRef(moving ? 1 : 0);
   const model = useMemo(() => scene.clone(true), [scene]);
   const modelBounds = useMemo(() => new THREE.Box3().setFromObject(model), [model]);
+  const modelCenter = useMemo(
+    () => modelBounds.getCenter(new THREE.Vector3()),
+    [modelBounds],
+  );
+  const modelSize = useMemo(
+    () => modelBounds.getSize(new THREE.Vector3()),
+    [modelBounds],
+  );
 
   useEffect(() => {
     targetMoving.current = moving ? 1 : 0;
@@ -97,14 +109,69 @@ function GhostModel({
 
   return (
     <group ref={groupRef} position={[1.7, 0.18, 0]}>
-      <primitive object={model} />
+      <group name="ghostCharacter">
+        <primitive object={model} />
+        <Text
+          anchorX="center"
+          anchorY="top"
+          color="#2ecaed"
+          fontSize={0.12}
+          outlineColor="#08080d"
+          outlineWidth={0.012}
+          position={[modelCenter.x, modelBounds.min.y - 0.12, modelCenter.z]}
+        >
+          Hit Me
+        </Text>
+        <mesh
+          position={modelCenter.toArray()}
+          onClick={(event) => {
+            event.stopPropagation();
+            onOpenAssistant();
+          }}
+          aria-label="Hit me - open Ask Alps portfolio assistant"
+        >
+          <boxGeometry args={[modelSize.x * 1.12, modelSize.y * 1.12, modelSize.z * 1.12]} />
+          <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+        </mesh>
+      </group>
     </group>
+  );
+}
+
+function GhostModel({
+  moving,
+  scrollProgress,
+  onOpenAssistant,
+}: {
+  moving: boolean;
+  scrollProgress: number;
+  onOpenAssistant: () => void;
+}) {
+  const { scene } = useGLTF(GHOST_ASSET);
+
+  return (
+    <GhostAsset
+      moving={moving}
+      scrollProgress={scrollProgress}
+      onOpenAssistant={onOpenAssistant}
+      scene={scene}
+    />
   );
 }
 
 export default function Animated3DChar() {
   const [moving, setMoving] = useState(false);
+  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setIsMounted(true);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   useEffect(() => {
     let timeout: number | undefined;
@@ -127,10 +194,15 @@ export default function Animated3DChar() {
     };
   }, []);
 
+  if (!isMounted) return null;
+
   return (
-    <div className={styles.canvasContainer} aria-hidden="true">
+    <div className={styles.canvasContainer}>
       <Canvas
         className={styles.canvas}
+        eventSource={document.body}
+        eventPrefix="client"
+        aria-hidden="true"
         dpr={[1, 1.5]}
         camera={{ position: [0, 0, 5], fov: 36, near: 0.1, far: 30 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
@@ -142,8 +214,13 @@ export default function Animated3DChar() {
         <GhostModel
           moving={moving}
           scrollProgress={scrollProgress}
+          onOpenAssistant={() => setIsAssistantOpen(true)}
         />
       </Canvas>
+      <PortfolioAssistant
+        isOpen={isAssistantOpen}
+        onClose={() => setIsAssistantOpen(false)}
+      />
     </div>
   );
 }
