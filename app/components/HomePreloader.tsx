@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./HomePreloader.module.css";
 
-const MINIMUM_DISPLAY_MS = 1800;
+const MINIMUM_DISPLAY_MS = 700;
 const PROGRESS_TICK_MS = 40;
 
 export default function HomePreloader() {
