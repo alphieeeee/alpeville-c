@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type SyntheticEvent,
+} from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
@@ -8,6 +14,11 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 import styles from "./PortfolioAssistant.module.css";
 
 gsap.registerPlugin(ScrollToPlugin, ScrollSmoother);
+
+function stopAssistantEvent(event: SyntheticEvent) {
+  event.stopPropagation();
+  event.nativeEvent.stopImmediatePropagation();
+}
 
 type AssistantOption = {
   id: string;
@@ -145,6 +156,8 @@ export default function PortfolioAssistant({
       role="dialog"
       aria-modal="false"
       aria-labelledby="portfolio-assistant-title"
+      onPointerDown={(event) => event.stopPropagation()}
+      onClick={(event) => event.stopPropagation()}
     >
       <div className={styles.header}>
         <div>
@@ -157,7 +170,10 @@ export default function PortfolioAssistant({
           ref={closeButtonRef}
           type="button"
           className={styles.closeButton}
-          onClick={onClose}
+          onClick={(event) => {
+            stopAssistantEvent(event);
+            onClose();
+          }}
           aria-label="Close portfolio assistant"
         >
           <span aria-hidden="true">x</span>

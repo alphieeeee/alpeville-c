@@ -38,6 +38,21 @@ describe("PortfolioAssistant", () => {
     expect(onClose).toHaveBeenCalledOnce();
   });
 
+  it("does not bubble the close click beyond the assistant panel", async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    const onBodyClick = vi.fn();
+    document.body.addEventListener("click", onBodyClick);
+
+    render(<PortfolioAssistant isOpen onClose={onClose} />);
+
+    await user.click(screen.getByRole("button", { name: "Close portfolio assistant" }));
+
+    expect(onClose).toHaveBeenCalledOnce();
+    expect(onBodyClick).not.toHaveBeenCalled();
+    document.body.removeEventListener("click", onBodyClick);
+  });
+
   it("shows the answer returned by the AI endpoint", async () => {
     const user = userEvent.setup();
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(

@@ -3,6 +3,7 @@ import "./globals.css";
 import TransitionLayout from "./components/gsap/TransitionLayout";
 import Header from "./components/Header";
 import Animated3DBG from "./components/Animated3DBG";
+import RouteAnimated3DChar from "./components/RouteAnimated3DChar";
 // import ScrollProgressBar from "./components/ScrollProgressBar";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -57,6 +58,7 @@ export default function RootLayout({
         <Animated3DBG />
         {/* <ScrollProgressBar /> */}
         <Header />
+        <RouteAnimated3DChar />
         <TransitionLayout>
           {children}
         </TransitionLayout>

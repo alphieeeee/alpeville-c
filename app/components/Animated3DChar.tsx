@@ -9,6 +9,100 @@ import PortfolioAssistant from "./PortfolioAssistant";
 
 const GHOST_ASSET = "/assets/ghost.glb";
 
+// Keep the reusable 3D object's initial and scrolled states in one place.
+const THREE_D_OBJECT_CONFIG = {
+  desktop: {
+    // x/y values use Three.js world units. Offsets and paddings are viewport
+    // fractions, making the tuning responsive when the viewport changes.
+    initialState: {
+      alignment: "right" as const,
+      xPosition: 0,
+      yPosition: 0.18,
+      xOffset: 0,
+      yOffset: 0,
+      topPadding: 0.04,
+      leftPadding: 0,
+      rightPadding: 0.1,
+      bottomPadding: 0,
+      scaleMultiplier: 0.72,
+    },
+    scrolledState: {
+      alignment: "right" as const,
+      xPosition: 0,
+      yPosition: 0,
+      xOffset: 0,
+      yOffset: 0,
+      topPadding: 0.04,
+      leftPadding: 0,
+      rightPadding: 0.04,
+      bottomPadding: 0,
+      targetWidthRatio: 0.1,
+    },
+  },
+  mobile: {
+    initialState: {
+      alignment: "center" as const,
+      xPosition: 0,
+      yPosition: 0.35,
+      xOffset: 0,
+      yOffset: 0,
+      topPadding: 0.43,
+      leftPadding: 0,
+      rightPadding: 0,
+      bottomPadding: 0,
+      scaleMultiplier: 0.5,
+    },
+    scrolledState: {
+      alignment: "right" as const,
+      xPosition: 0,
+      yPosition: 0,
+      xOffset: 0,
+      yOffset: 0,
+      topPadding: 0.04,
+      leftPadding: 0,
+      rightPadding: 0.04,
+      bottomPadding: 0,
+      targetWidthRatio: 0.13,
+    },
+  },
+} as const;
+
+type ThreeDObjectState = {
+  alignment: "left" | "center" | "right";
+  xPosition?: number;
+  yPosition?: number;
+  xOffset?: number;
+  targetWidthRatio?: number;
+  leftPadding?: number;
+  rightPadding?: number;
+};
+
+function getHorizontalPosition(
+  position: ThreeDObjectState,
+  viewportWidth: number,
+  modelWidth: number,
+  scale: number,
+) {
+  const leftPadding = viewportWidth * (position.leftPadding || 0);
+  const rightPadding = viewportWidth * (position.rightPadding || 0);
+  const manualOffset =
+    (position.xPosition || 0) + viewportWidth * (position.xOffset || 0);
+
+  if (position.alignment === "center") {
+    return (
+      modelWidth * scale * 0.5 +
+      (leftPadding - rightPadding) * 0.5 +
+      manualOffset
+    );
+  }
+
+  if (position.alignment === "left") {
+    return -viewportWidth / 2 + leftPadding - rightPadding + manualOffset;
+  }
+
+  return viewportWidth / 2 - rightPadding + leftPadding + manualOffset;
+}
+
 function GhostAsset({
   moving,
   scrollProgress,
@@ -21,7 +115,8 @@ function GhostAsset({
   scene: THREE.Group;
 }) {
   const groupRef = useRef<THREE.Group>(null);
-  const { viewport } = useThree();
+  const headerHeightRef = useRef(0);
+  const { viewport, size } = useThree();
   const targetMoving = useRef(moving ? 1 : 0);
   const model = useMemo(() => scene.clone(true), [scene]);
   const modelBounds = useMemo(() => new THREE.Box3().setFromObject(model), [model]);
@@ -37,6 +132,21 @@ function GhostAsset({
   useEffect(() => {
     targetMoving.current = moving ? 1 : 0;
   }, [moving]);
+
+  useEffect(() => {
+    const header = document.querySelector<HTMLElement>("header");
+    if (!header) return;
+
+    const updateHeaderHeight = () => {
+      headerHeightRef.current = header.getBoundingClientRect().height;
+    };
+
+    updateHeaderHeight();
+    const observer = new ResizeObserver(updateHeaderHeight);
+    observer.observe(header);
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     model.traverse((child) => {
@@ -58,20 +168,60 @@ function GhostAsset({
     );
     groupRef.current.userData.motion = motion;
 
-    const small = viewport.width < 6.5;
+    const layout =
+      size.width >= 1024
+        ? THREE_D_OBJECT_CONFIG.desktop
+        : THREE_D_OBJECT_CONFIG.mobile;
+    const initialState = layout.initialState;
+    const scrolledState = layout.scrolledState;
     const modelWidth = Math.max(modelBounds.max.x - modelBounds.min.x, 0.001);
-    const rightPadding = viewport.width * 0.1;
     const initialScale =
-      THREE.MathUtils.clamp(viewport.width / 6.5, 0.64, 0.9) * 0.72;
-    const scrolledScale = (viewport.width * 0.1) / modelWidth;
-    const initialX =
-      viewport.width / 2 - rightPadding - modelBounds.max.x * initialScale;
-    const scrolledX =
-      viewport.width / 2 - rightPadding - modelBounds.max.x * scrolledScale;
-    const topPadding = viewport.height * 0.1;
-    const initialY = small ? 0.35 : 0.18;
+      THREE.MathUtils.clamp(viewport.width / 6.5, 0.64, 0.9) *
+      (initialState.scaleMultiplier || 1);
+    // Preserve the existing target-width formula while making its ratio
+    // configurable for each responsive layout.
+    const scrolledScale =
+      (viewport.width * (scrolledState.targetWidthRatio || 0.1)) / modelWidth;
+    // The outer group is anchored at the model's top-right corner, so its
+    // position does not need to compensate for the current scale.
+    const initialX = getHorizontalPosition(
+      initialState,
+      viewport.width,
+      modelWidth,
+      initialScale,
+    );
+    const scrolledX = getHorizontalPosition(
+      scrolledState,
+      viewport.width,
+      modelWidth,
+      scrolledScale,
+    );
+    // Convert the fixed header's pixel height into the Canvas' world units.
+    const headerHeight =
+      (headerHeightRef.current / Math.max(size.height, 1)) * viewport.height;
+    const initialTopPadding =
+      headerHeight +
+      viewport.height * (initialState.topPadding || 0) +
+      viewport.height * (initialState.bottomPadding || 0);
+    const scrolledTopPadding =
+      headerHeight +
+      viewport.height * (scrolledState.topPadding || 0) +
+      viewport.height * (scrolledState.bottomPadding || 0);
+    const initialBelowHeaderY =
+      viewport.height / 2 -
+      initialTopPadding +
+      (initialState.yPosition || 0) +
+      viewport.height * (initialState.yOffset || 0);
     const scrolledY =
-      viewport.height / 2 - topPadding - modelBounds.max.y * scrolledScale;
+      viewport.height / 2 -
+      scrolledTopPadding +
+      (scrolledState.yPosition || 0) +
+      viewport.height * (scrolledState.yOffset || 0);
+    const initialTop =
+      (initialState.yPosition || 0) +
+      modelBounds.max.y * initialScale +
+      viewport.height * (initialState.yOffset || 0);
+    const initialY = Math.min(initialTop, initialBelowHeaderY);
     const targetX = THREE.MathUtils.lerp(initialX, scrolledX, scrollProgress);
     const targetY = THREE.MathUtils.lerp(initialY, scrolledY, scrollProgress);
     const targetScale = THREE.MathUtils.lerp(
@@ -109,7 +259,10 @@ function GhostAsset({
 
   return (
     <group ref={groupRef} position={[1.7, 0.18, 0]}>
-      <group name="ghostCharacter">
+      <group
+        name="ghostCharacter"
+        position={[-modelBounds.max.x, -modelBounds.max.y, 0]}
+      >
         <primitive object={model} />
         <Text
           anchorX="center"
