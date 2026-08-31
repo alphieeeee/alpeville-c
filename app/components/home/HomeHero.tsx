@@ -31,7 +31,7 @@ export default function HomeHero({
       style={style}
       className={`${styles.hero} flex flex-col items-center justify-between py-8 sm:p-10 ${className}`.trim()}
     >
-      <div className={`${styles.layout} w-full grow flex justify-center lg:justify-start`}>
+      <div className={`${styles.layout} w-full grow flex lg:items-center justify-center lg:justify-start`}>
         <div className={`${styles.copy} text-center lg:text-left`}>
           <AnimPanning
             delay={0.5}
