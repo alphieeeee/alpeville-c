@@ -4,9 +4,10 @@ import Link from "next/link";
 import type { ComponentPropsWithoutRef, MouseEvent, ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
 import styles from "./CtaButton.module.css";
 
-gsap.registerPlugin(ScrollToPlugin);
+gsap.registerPlugin(ScrollToPlugin, ScrollSmoother);
 
 type CtaButtonProps = {
   href: string;
@@ -37,11 +38,23 @@ export default function CtaButton({
 
     if (!target) return;
 
+    const targetElement = document.getElementById(target);
+    const headerHeight =
+      document.querySelector<HTMLElement>("#header-divider")?.clientHeight ?? 0;
+    const smoother = ScrollSmoother.get();
+
+    if (targetElement && smoother) {
+      const destination =
+        targetElement.getBoundingClientRect().top + smoother.scrollTop() - headerHeight;
+      smoother.scrollTo(destination, true);
+      return;
+    }
+
     gsap.to(window, {
       duration: 0.9,
       scrollTo: {
         y: `#${target}`,
-        offsetY: document.querySelector<HTMLElement>("#header-divider")?.clientHeight ?? 0,
+        offsetY: headerHeight,
       },
       ease: "power2.out",
     });
