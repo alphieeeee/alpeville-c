@@ -34,13 +34,23 @@ Changes to React pages are deployed from this repository. Changes to Strapi cont
 
 ## Local Setup
 
+### Prerequisites
+
+- Node.js 20 or newer
+- npm
+- A running Strapi CMS for CMS-backed content
+- An OpenAI API key if you want to use the portfolio assistant
+
+### Install and Run
+
 Install dependencies:
 
 ```bash
+cd /Users/alps/Documents/flyrank-ai/alpeville-c
 npm install
 ```
 
-Create a local `.env` file using `.env.example` as a guide. Do not commit real API tokens or database credentials.
+Create a local `.env` file using `.env.example` as a guide. At minimum, configure the Strapi URL and token. Add `OPENAI_API_KEY` to enable the assistant. Do not commit real API tokens or database credentials.
 
 Start the frontend:
 
@@ -51,6 +61,13 @@ npm run dev
 The app runs at `http://localhost:3000` by default.
 
 The Strapi CMS must also be running when testing CMS-backed pages. The frontend falls back to safe error states when Strapi is unavailable.
+
+For a production-mode local check, run:
+
+```bash
+npm run build
+npm run start
+```
 
 ## Environment Variables
 
@@ -63,8 +80,17 @@ The Strapi CMS must also be running when testing CMS-backed pages. The frontend 
 | `STRAPI_REVALIDATE_SECONDS` | ISR lifetime for normal Strapi content; defaults to 900 seconds |
 | `NEXT_PUBLIC_SITE_URL` | Canonical production URL used by metadata and the sitemap |
 | `CV_DATA_SOURCE` | Set to `strapi` or `mock` when switching the CV data source |
+| `OPENAI_API_KEY` | Server-side OpenAI API key used by the portfolio assistant |
+| `OPENAI_MODEL` | Optional OpenAI model override; defaults to `gpt-5.4-mini` |
 
 `STRAPI_API_TOKEN` must be configured in Vercel as a server-side secret. Preview and Production should point to the intended Strapi environment independently.
+`OPENAI_API_KEY` must also remain server-side and must never use a `NEXT_PUBLIC_` prefix.
+
+## AI Portfolio Assistant
+
+The site includes an Ask Alps assistant that answers visitor questions using published portfolio context from the frontend services. It is exposed through the server-side `POST /api/assistant` route, so the OpenAI key is not sent to the browser. The assistant uses `OPENAI_MODEL` when configured and otherwise uses `gpt-5.4-mini`.
+
+Requests are limited to 10 questions per client key within a 10-minute window, and questions are limited to 500 characters. If OpenAI is not configured, the route returns a safe unavailable response and the rest of the portfolio remains usable.
 
 ## Deployment
 
