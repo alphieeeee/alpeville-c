@@ -1,8 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
+import gsap from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
 import styles from "./PortfolioAssistant.module.css";
+
+gsap.registerPlugin(ScrollToPlugin, ScrollSmoother);
 
 type AssistantOption = {
   id: string;
@@ -15,39 +20,23 @@ type AssistantOption = {
 const assistantOptions: AssistantOption[] = [
   {
     id: "about",
-    label: "Tell me about Alps",
+    label: "Who is Alps?",
     answer:
       "Alpeville Carinan is a Senior Frontend Developer who brings designs to life through code, motion, and interaction. Alps focuses on polished, responsive web experiences and creative development.",
     sectionId: "about",
     sectionLabel: "Explore About Me",
   },
   {
-    id: "work",
-    label: "What kind of work do you do?",
-    answer:
-      "Alps works across interactive creative development, frontend applications, rich media, web animation, API integrations, and headless CMS projects.",
-    sectionId: "what-i-do",
-    sectionLabel: "See What I Do",
-  },
-  {
     id: "projects",
-    label: "Show me some projects",
+    label: "Explore projects",
     answer:
       "The work section includes motion-led websites, interactive campaigns, rich media experiences, and AI-augmented frontend projects built with technologies such as React, Vue, Nuxt, GSAP, and Next.js.",
     sectionId: "work",
     sectionLabel: "Explore Projects",
   },
   {
-    id: "skills",
-    label: "What are your strongest skills?",
-    answer:
-      "The portfolio highlights frontend development, creative development, web animation, API integration, and problem solving, with experience across React, Vue, Next.js, Nuxt, GSAP, and Three.js.",
-    sectionId: "about",
-    sectionLabel: "View Skills",
-  },
-  {
     id: "contact",
-    label: "How can I contact you?",
+    label: "Get in touch",
     answer:
       "You can reach Alps through the contact section or use the email link in the portfolio navigation.",
     sectionId: "contact",
@@ -66,6 +55,10 @@ export default function PortfolioAssistant({
 }: PortfolioAssistantProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [selectedOptionId, setSelectedOptionId] = useState("about");
+  const [question, setQuestion] = useState("");
+  const [aiAnswer, setAiAnswer] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const selectedOption = assistantOptions.find(
     (option) => option.id === selectedOptionId,
   );
@@ -84,12 +77,64 @@ export default function PortfolioAssistant({
   }, [isOpen, onClose]);
 
   const goToSection = (sectionId?: string) => {
-    if (!sectionId) return;
+    if (!sectionId || typeof window === "undefined") return;
 
-    document.getElementById(sectionId)?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
+    const targetElement = document.getElementById(sectionId);
+    if (!targetElement) return;
+
+    const headerHeight =
+      document.querySelector<HTMLElement>("#header-divider")?.clientHeight ?? 0;
+    const smoother = ScrollSmoother.get();
+
+    if (smoother) {
+      const destination =
+        targetElement.getBoundingClientRect().top + smoother.scrollTop() - headerHeight;
+      smoother.scrollTo(destination, true);
+      return;
+    }
+
+    gsap.to(window, {
+      duration: 0.8,
+      scrollTo: {
+        y: `#${sectionId}`,
+        offsetY: headerHeight,
+      },
+      ease: "power2.out",
     });
+  };
+
+  const askAssistant = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmedQuestion = question.trim();
+
+    if (!trimmedQuestion || isLoading) return;
+
+    setIsLoading(true);
+    setAiAnswer(null);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/assistant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: trimmedQuestion }),
+      });
+      const result = (await response.json()) as { answer?: string; error?: string };
+
+      if (!response.ok || !result.answer) {
+        throw new Error(result.error ?? "The assistant could not answer right now.");
+      }
+
+      setAiAnswer(result.answer);
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "The assistant could not answer right now.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!isOpen || !selectedOption) return null;
@@ -120,8 +165,7 @@ export default function PortfolioAssistant({
       </div>
 
       <p className={styles.prompt}>
-        Choose a question to discover more about Alps and the work behind this
-        site.
+        Start with a topic or ask a question about Alps&apos;s portfolio.
       </p>
 
       <ul className={styles.suggestions} aria-label="Suggested questions">
@@ -132,7 +176,11 @@ export default function PortfolioAssistant({
               className={`${styles.suggestion} ${
                 option.id === selectedOptionId ? styles.suggestionActive : ""
               }`.trim()}
-              onClick={() => setSelectedOptionId(option.id)}
+              onClick={() => {
+                setSelectedOptionId(option.id);
+                setAiAnswer(null);
+                setError(null);
+              }}
               aria-pressed={option.id === selectedOptionId}
             >
               {option.label}
@@ -141,9 +189,36 @@ export default function PortfolioAssistant({
         ))}
       </ul>
 
+      <form className={styles.askForm} onSubmit={askAssistant}>
+        <label className={styles.inputLabel} htmlFor="assistant-question">
+          Ask a custom question
+        </label>
+        <div className={styles.inputRow}>
+          <input
+            id="assistant-question"
+            className={styles.questionInput}
+            value={question}
+            onChange={(event) => setQuestion(event.target.value)}
+            maxLength={500}
+            placeholder="Ask about the work or experience..."
+            disabled={isLoading}
+          />
+          <button
+            type="submit"
+            className={styles.askButton}
+            disabled={isLoading || !question.trim()}
+          >
+            {isLoading ? "..." : "Ask"}
+          </button>
+        </div>
+      </form>
+
       <div className={styles.answer} aria-live="polite">
-        <p>{selectedOption.answer}</p>
-        {selectedOption.sectionId ? (
+        {isLoading ? <p>Looking through the portfolio...</p> : null}
+        {error ? <p className={styles.error}>{error}</p> : null}
+        {aiAnswer ? <p className={styles.answerText}>{aiAnswer}</p> : null}
+        {!isLoading && !error && !aiAnswer ? <p>{selectedOption.answer}</p> : null}
+        {!aiAnswer && selectedOption.sectionId ? (
           <button
             type="button"
             className={styles.sectionLink}

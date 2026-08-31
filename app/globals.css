@@ -58,7 +58,7 @@
   box-sizing: border-box;
 }
 
-html {
+/* html {
   scroll-behavior: smooth;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -67,7 +67,7 @@ html {
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;
-}
+} */
 
 body {
   min-height: 100vh;
