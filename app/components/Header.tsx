@@ -7,7 +7,7 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { usePathname, useRouter } from "next/navigation";
 import DesktopNav from "./DesktopNav";
 import MobileNav from "./MobileNav";
-import { navItems } from "../types/navTypes";
+import { navItems } from "../data/navigation";
 
 gsap.registerPlugin(ScrollToPlugin, ScrollSmoother);
 
@@ -44,7 +44,7 @@ export default function Header({
 }: HeaderProps) {
   const isScrolled = useHeaderScrollState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("#about");
+  const [activeSection, setActiveSection] = useState("/");
   const pathname = usePathname();
   const router = useRouter();
   const activeHref = pathname === "/" ? activeSection : pathname;
@@ -70,7 +70,7 @@ export default function Header({
       (entries) => {
         const visibleEntry = entries.find((entry) => entry.isIntersecting);
         if (!visibleEntry) return;
-        setActiveSection(`#${visibleEntry.target.id}`);
+        setActiveSection(`/#${visibleEntry.target.id}`);
       },
       {
         root: null,
@@ -117,7 +117,7 @@ export default function Header({
 
     const frame = window.requestAnimationFrame(() => {
       const itemIndex = navItems.findIndex((item) => item.target === target);
-      setActiveSection(`#${target}`);
+      setActiveSection(`/#${target}`);
       goToSection(target, itemIndex, navItems.length);
     });
 
@@ -140,7 +140,7 @@ export default function Header({
         window.history.pushState(null, "", targetHref);
       }
 
-      setActiveSection(`#${item.target}`);
+      setActiveSection(targetHref);
       goToSection(item.target, itemIndex, navItems.length);
       return;
     }

@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
-import type { NavItem } from "../types/navTypes";
-import { navItems } from "../types/navTypes";
+import { navItems } from "../data/navigation";
+import type { NavItem } from "../types/navigation";
 
 type DesktopNavProps = {
   onNavigate: (item: NavItem) => void;
@@ -40,7 +40,8 @@ export default function DesktopNav({
             key={item.href}
             type="button"
             onClick={() => onNavigate(item)}
-            className={`transition-colors focus-visible:text-secondary ${
+            aria-current={activeHref === item.href ? "page" : undefined}
+            className={`cursor-pointer transition-colors focus-visible:text-secondary ${
               activeHref === item.href
                 ? "text-secondary"
                 : "text-foreground/80 hover:text-secondary"

@@ -4,6 +4,7 @@ import SectionHeading from "../SectionHeading";
 import type { AboutData } from "../../../lib/api/about/types";
 import styles from "./AboutSection.module.css";
 import SkillsRate from "./SkillsRate";
+import AnimPanning from "../gsap/AnimPanning";
 
 type AboutSectionBaseProps = ComponentPropsWithoutRef<"section">;
 
@@ -31,6 +32,14 @@ export default function AboutSection({
 
       <div className={`${styles.container} grid gap-8 grid-cols-1`}>
         <div className={`grid gap-8`}>
+          <AnimPanning
+            duration={0.8}
+            direction="up"
+            from={0}
+            to={0}
+            fade="in"
+            animOnce={true}
+          >
           <div className={styles.profileRow}>
             <div className={styles.headshotWrap}>
               <div className={styles.headshotShell}>
@@ -49,19 +58,36 @@ export default function AboutSection({
               <p className={styles.jobTitle}>{jobTitle}</p>
             </div>
           </div>
-
-          <div className={styles.bio}>
-            <p className={styles.bioPrimary}>{bioPrimary}</p>
-            <p className={styles.bioSecondary}>{bioSecondary}</p>
+          </AnimPanning>
+          <AnimPanning
+            duration={0.8}
+            direction="up"
+            from={0}
+            to={0}
+            fade="in"
+            animOnce={true}
+          >
+            <div className={styles.bio}>
+              <p className={styles.bioPrimary}>{bioPrimary}</p>
+              <p className={styles.bioSecondary}>{bioSecondary}</p>
+            </div>
+          </AnimPanning>
+        </div>
+        <AnimPanning
+          duration={0.8}
+          direction="up"
+          from={0}
+          to={0}
+          fade="in"
+          animOnce={true}
+        >
+          <div>
+            <SkillsRate
+              className="h-full"
+              items={skills ?? []}
+            />
           </div>
-        </div>
-
-        <div>
-          <SkillsRate
-            className="h-full"
-            items={skills ?? []}
-          />
-        </div>
+        </AnimPanning>
       </div>
 
       {children}
