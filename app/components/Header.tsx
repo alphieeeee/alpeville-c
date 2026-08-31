@@ -100,7 +100,7 @@ export default function Header({
     }
 
     gsap.to(window, {
-      duration: 0.1,
+      duration: 0.9,
       scrollTo: {
         y: `#${target}`,
         offsetY: headerHeight,
@@ -153,6 +153,8 @@ export default function Header({
       {...props}
       id={id}
       style={style}
+      onPointerDown={(event) => event.stopPropagation()}
+      onClick={(event) => event.stopPropagation()}
       className={`fixed top-0 w-full z-50 ${
         isScrolled && !isMenuOpen
           ? "glass-shell bg-background/55 shadow-[0_16px_48px_rgba(0,0,0,0.22)]"
