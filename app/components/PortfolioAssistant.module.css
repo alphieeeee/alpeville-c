@@ -1,6 +1,6 @@
 .panel {
   position: fixed;
-  right: clamp(1rem, 4vw, 4rem);
+  right: 2.5vw;
   bottom: clamp(1rem, 4vw, 4rem);
   z-index: 40;
   width: min(25rem, calc(100vw - 2rem));
@@ -214,7 +214,7 @@
 
 @media (max-width: 639px) {
   .panel {
-    right: 1rem;
+    right: 2.5vw;
     bottom: 1rem;
     width: min(30rem, calc(100vw - 2rem));
     max-height: calc(100dvh - 2rem);
