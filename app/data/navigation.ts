@@ -3,6 +3,7 @@ import type { NavItem } from "../types/navigation";
 export const navItems: NavItem[] = [
   { label: "Home", href: "/", target: "home", isSection: true },
   { label: "About", href: "/#about", target: "about", isSection: true },
+  { label: "What I Do", href: "/#what-i-do", target: "what-i-do", isSection: true },
   { label: "Work", href: "/#work", target: "work", isSection: true },
   {
     label: "Certifications",

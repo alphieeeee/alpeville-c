@@ -8,6 +8,8 @@ import ErrorState from "./components/ErrorState";
 import SectionError from "./components/SectionError";
 import WorkSection from "./components/home/WorkSection";
 import WhatIDoSection from "./components/home/WhatIDoSection";
+import Animated3DChar from "./components/Animated3DChar";
+import HomePreloader from "./components/HomePreloader";
 
 import { getHomeHeroData } from "../lib/api/home/service";
 import { getAboutData } from "../lib/api/about/service";
@@ -36,14 +38,21 @@ export default async function Home() {
 
   if (heroResult.error) {
     return (
-      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
-        <ErrorState message={heroResult.error.message} retryHref="/" />
-      </main>
+      <>
+        <HomePreloader />
+        <Animated3DChar />
+        <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
+          <ErrorState message={heroResult.error.message} retryHref="/" />
+        </main>
+      </>
     );
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
+    <>
+      <HomePreloader />
+      <Animated3DChar />
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
       <HomeHero id="home" heroData={heroResult.data} />
 
       {aboutResult.data ? (
@@ -120,6 +129,7 @@ export default async function Home() {
           </CtaButton>
         </AnimPanning>
       </div>
-    </main>
+      </main>
+    </>
   );
 }
