@@ -64,7 +64,7 @@ export default function PortfolioAssistant({
   isOpen,
   onClose,
 }: PortfolioAssistantProps) {
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [selectedOptionId, setSelectedOptionId] = useState("about");
   const [question, setQuestion] = useState("");
   const [aiAnswer, setAiAnswer] = useState<string | null>(null);
@@ -77,14 +77,19 @@ export default function PortfolioAssistant({
   useEffect(() => {
     if (!isOpen) return;
 
-    closeButtonRef.current?.focus();
+    const focusFrame = window.requestAnimationFrame(() => {
+      inputRef.current?.focus({ preventScroll: true });
+    });
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [isOpen, onClose]);
 
   const goToSection = (sectionId?: string) => {
@@ -167,7 +172,6 @@ export default function PortfolioAssistant({
           </h2>
         </div>
         <button
-          ref={closeButtonRef}
           type="button"
           className={styles.closeButton}
           onClick={(event) => {
@@ -212,6 +216,7 @@ export default function PortfolioAssistant({
         <div className={styles.inputRow}>
           <input
             id="assistant-question"
+            ref={inputRef}
             className={styles.questionInput}
             value={question}
             onChange={(event) => setQuestion(event.target.value)}
