@@ -1,13 +1,13 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Text, useGLTF } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import styles from "./Animated3DChar.module.css";
 import PortfolioAssistant from "./PortfolioAssistant";
 
-const GHOST_ASSET = "/assets/ghost.glb";
+const BOO_ASSET = "/assets/boo.glb";
 
 // Keep the reusable 3D object's initial and scrolled states in one place.
 const THREE_D_OBJECT_CONFIG = {
@@ -22,9 +22,9 @@ const THREE_D_OBJECT_CONFIG = {
       yOffset: 0,
       topPadding: 0.04,
       leftPadding: 0,
-      rightPadding: 0.1,
+      rightPadding: 0.2,
       bottomPadding: 0,
-      scaleMultiplier: 0.72,
+      scaleMultiplier: 0.8,
     },
     scrolledState: {
       alignment: "right" as const,
@@ -32,7 +32,7 @@ const THREE_D_OBJECT_CONFIG = {
       yPosition: 0,
       xOffset: 0,
       yOffset: 0,
-      topPadding: 0.04,
+      topPadding: 0.06,
       leftPadding: 0,
       rightPadding: 0.04,
       bottomPadding: 0,
@@ -46,11 +46,11 @@ const THREE_D_OBJECT_CONFIG = {
       yPosition: 0.35,
       xOffset: 0,
       yOffset: 0,
-      topPadding: 0.43,
+      topPadding: 0.5,
       leftPadding: 0,
       rightPadding: 0,
       bottomPadding: 0,
-      scaleMultiplier: 0.5,
+      scaleMultiplier: 0.55,
     },
     scrolledState: {
       alignment: "right" as const,
@@ -58,11 +58,11 @@ const THREE_D_OBJECT_CONFIG = {
       yPosition: 0,
       xOffset: 0,
       yOffset: 0,
-      topPadding: 0.04,
+      topPadding: 0.05,
       leftPadding: 0,
       rightPadding: 0.04,
       bottomPadding: 0,
-      targetWidthRatio: 0.13,
+      targetWidthRatio: 0.15,
     },
   },
 } as const;
@@ -103,21 +103,108 @@ function getHorizontalPosition(
   return viewportWidth / 2 - rightPadding + leftPadding + manualOffset;
 }
 
+function AiIndicator({ position }: { position: [number, number, number] }) {
+  const bubbleShape = useMemo(() => {
+    const shape = new THREE.Shape();
+    shape.moveTo(-0.16, 0.14);
+    shape.lineTo(0.16, 0.14);
+    shape.quadraticCurveTo(0.28, 0.14, 0.28, 0.02);
+    shape.lineTo(0.28, -0.02);
+    shape.quadraticCurveTo(0.28, -0.14, 0.16, -0.14);
+    shape.lineTo(0.08, -0.14);
+    shape.lineTo(-0.04, -0.25);
+    shape.quadraticCurveTo(-0.06, -0.27, -0.06, -0.23);
+    shape.lineTo(-0.06, -0.14);
+    shape.lineTo(-0.16, -0.14);
+    shape.quadraticCurveTo(-0.28, -0.14, -0.28, -0.02);
+    shape.lineTo(-0.28, 0.02);
+    shape.quadraticCurveTo(-0.28, 0.14, -0.16, 0.14);
+
+    const hole = new THREE.Path();
+    hole.moveTo(-0.14, 0.07);
+    hole.lineTo(0.14, 0.07);
+    hole.quadraticCurveTo(0.2, 0.07, 0.2, 0.01);
+    hole.lineTo(0.2, -0.01);
+    hole.quadraticCurveTo(0.2, -0.07, 0.14, -0.07);
+    hole.lineTo(-0.14, -0.07);
+    hole.quadraticCurveTo(-0.2, -0.07, -0.2, -0.01);
+    hole.lineTo(-0.2, 0.01);
+    hole.quadraticCurveTo(-0.2, 0.07, -0.14, 0.07);
+    shape.holes.push(hole);
+
+    return shape;
+  }, []);
+
+  const sparkleShape = useMemo(() => {
+    const shape = new THREE.Shape();
+    shape.moveTo(0, 0.08);
+    shape.lineTo(0.035, 0.025);
+    shape.lineTo(0.09, -0.01);
+    shape.lineTo(0.035, -0.045);
+    shape.lineTo(0, -0.1);
+    shape.lineTo(-0.035, -0.045);
+    shape.lineTo(-0.09, -0.01);
+    shape.lineTo(-0.035, 0.025);
+    shape.closePath();
+    return shape;
+  }, []);
+
+  return (
+    <group position={position} scale={0.82}>
+      <mesh>
+        <shapeGeometry args={[bubbleShape]} />
+        <meshBasicMaterial
+          color="#ffffff"
+          transparent
+          opacity={0.82}
+          depthWrite={false}
+        />
+      </mesh>
+      <mesh position={[-0.12, -0.01, 0.005]} scale={0.62}>
+        <shapeGeometry args={[sparkleShape]} />
+        <meshBasicMaterial
+          color="#ffffff"
+          transparent
+          opacity={0.9}
+          depthWrite={false}
+        />
+      </mesh>
+      <mesh position={[0, -0.01, 0.005]} scale={0.62}>
+        <shapeGeometry args={[sparkleShape]} />
+        <meshBasicMaterial
+          color="#ffffff"
+          transparent
+          opacity={0.9}
+          depthWrite={false}
+        />
+      </mesh>
+      <mesh position={[0.12, -0.01, 0.005]} scale={0.62}>
+        <shapeGeometry args={[sparkleShape]} />
+        <meshBasicMaterial
+          color="#ffffff"
+          transparent
+          opacity={0.9}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
 function GhostAsset({
-  moving,
   scrollProgress,
+  isScrolling,
   onOpenAssistant,
   scene,
 }: {
-  moving: boolean;
   scrollProgress: number;
+  isScrolling: boolean;
   onOpenAssistant: () => void;
   scene: THREE.Group;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const headerHeightRef = useRef(0);
   const { viewport, size } = useThree();
-  const targetMoving = useRef(moving ? 1 : 0);
   const model = useMemo(() => scene.clone(true), [scene]);
   const modelBounds = useMemo(() => new THREE.Box3().setFromObject(model), [model]);
   const modelCenter = useMemo(
@@ -128,10 +215,6 @@ function GhostAsset({
     () => modelBounds.getSize(new THREE.Vector3()),
     [modelBounds],
   );
-
-  useEffect(() => {
-    targetMoving.current = moving ? 1 : 0;
-  }, [moving]);
 
   useEffect(() => {
     const header = document.querySelector<HTMLElement>("header");
@@ -159,14 +242,6 @@ function GhostAsset({
 
   useFrame(({ clock }, delta) => {
     if (!groupRef.current) return;
-
-    const motion = THREE.MathUtils.damp(
-      groupRef.current.userData.motion ?? 0,
-      targetMoving.current,
-      8,
-      delta,
-    );
-    groupRef.current.userData.motion = motion;
 
     const layout =
       size.width >= 1024
@@ -229,6 +304,11 @@ function GhostAsset({
       scrolledScale,
       scrollProgress,
     );
+    const targetRotationY = THREE.MathUtils.lerp(
+      Math.PI / 12,
+      THREE.MathUtils.degToRad(-55),
+      isScrolling ? 1 : 0,
+    );
 
     groupRef.current.position.x = THREE.MathUtils.damp(
       groupRef.current.position.x,
@@ -242,11 +322,12 @@ function GhostAsset({
       5,
       delta,
     );
-    groupRef.current.rotation.y =
-      Math.sin(clock.elapsedTime * 0.7) * 0.07 +
-      (moving ? -motion * 0.45 : 0);
-    groupRef.current.rotation.z =
-      Math.sin(clock.elapsedTime * 0.9) * 0.018 + motion * 0.07;
+    groupRef.current.rotation.y = THREE.MathUtils.damp(
+      groupRef.current.rotation.y,
+      targetRotationY,
+      7,
+      delta,
+    );
     groupRef.current.scale.setScalar(
       THREE.MathUtils.damp(
         groupRef.current.scale.x,
@@ -264,24 +345,25 @@ function GhostAsset({
         position={[-modelBounds.max.x, -modelBounds.max.y, 0]}
       >
         <primitive object={model} />
-        <Text
-          anchorX="center"
-          anchorY="top"
-          color="#2ecaed"
-          fontSize={0.12}
-          outlineColor="#08080d"
-          outlineWidth={0.012}
-          position={[modelCenter.x, modelBounds.min.y - 0.12, modelCenter.z]}
-        >
-          Hit Me
-        </Text>
+        <AiIndicator
+          position={[modelBounds.max.x - 0.18, modelBounds.max.y + 0.3, modelCenter.z]}
+        />
         <mesh
           position={modelCenter.toArray()}
+          onPointerOver={(event) => {
+            event.stopPropagation();
+            document.body.style.cursor = "pointer";
+          }}
+          onPointerOut={(event) => {
+            event.stopPropagation();
+            document.body.style.cursor = "";
+          }}
           onClick={(event) => {
             event.stopPropagation();
+            document.body.style.cursor = "";
             onOpenAssistant();
           }}
-          aria-label="Hit me - open Ask Alps portfolio assistant"
+          aria-label="Open Ask Alps portfolio assistant"
         >
           <boxGeometry args={[modelSize.x * 1.12, modelSize.y * 1.12, modelSize.z * 1.12]} />
           <meshBasicMaterial transparent opacity={0} depthWrite={false} />
@@ -292,20 +374,20 @@ function GhostAsset({
 }
 
 function GhostModel({
-  moving,
   scrollProgress,
+  isScrolling,
   onOpenAssistant,
 }: {
-  moving: boolean;
   scrollProgress: number;
+  isScrolling: boolean;
   onOpenAssistant: () => void;
 }) {
-  const { scene } = useGLTF(GHOST_ASSET);
+  const { scene } = useGLTF(BOO_ASSET);
 
   return (
     <GhostAsset
-      moving={moving}
       scrollProgress={scrollProgress}
+      isScrolling={isScrolling}
       onOpenAssistant={onOpenAssistant}
       scene={scene}
     />
@@ -313,10 +395,10 @@ function GhostModel({
 }
 
 export default function Animated3DChar() {
-  const [moving, setMoving] = useState(false);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -331,9 +413,9 @@ export default function Animated3DChar() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrollProgress(Math.min(currentScrollY / 180, 1));
-      setMoving(true);
+      setIsScrolling(true);
       if (timeout) window.clearTimeout(timeout);
-      timeout = window.setTimeout(() => setMoving(false), 180);
+      timeout = window.setTimeout(() => setIsScrolling(false), 180);
     };
 
     const initialFrame = window.requestAnimationFrame(() =>
@@ -359,14 +441,11 @@ export default function Animated3DChar() {
         dpr={[1, 1.5]}
         camera={{ position: [0, 0, 5], fov: 36, near: 0.1, far: 30 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-        shadows
       >
-        <ambientLight intensity={1.8} />
-        <directionalLight position={[3, 4, 5]} intensity={3.4} color="#ffffff" castShadow />
-        <directionalLight position={[-3, 1, 2]} intensity={0.8} color="#9de8ff" />
+        <ambientLight intensity={1.8} color="#ffffff" />
         <GhostModel
-          moving={moving}
           scrollProgress={scrollProgress}
+          isScrolling={isScrolling}
           onOpenAssistant={() => setIsAssistantOpen(true)}
         />
       </Canvas>
@@ -378,4 +457,4 @@ export default function Animated3DChar() {
   );
 }
 
-useGLTF.preload(GHOST_ASSET);
+useGLTF.preload(BOO_ASSET);

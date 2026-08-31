@@ -13,7 +13,7 @@
   height: 100vh !important;
   height: 100dvh !important;
   pointer-events: none !important;
-  filter: drop-shadow(0 1.5rem 2rem rgba(0, 0, 0, 0.28));
+  filter: none;
 }
 
 @media (max-width: 639px) {
