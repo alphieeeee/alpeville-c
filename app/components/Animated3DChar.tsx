@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { Text, useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import styles from "./Animated3DChar.module.css";
@@ -104,6 +104,8 @@ function getHorizontalPosition(
 }
 
 function AiIndicator({ position }: { position: [number, number, number] }) {
+  const sparkleGroupRef = useRef<THREE.Group>(null);
+
   const bubbleShape = useMemo(() => {
     const shape = new THREE.Shape();
     shape.moveTo(-0.16, 0.14);
@@ -149,6 +151,13 @@ function AiIndicator({ position }: { position: [number, number, number] }) {
     return shape;
   }, []);
 
+  useFrame(({ clock }) => {
+    if (!sparkleGroupRef.current) return;
+
+    const pulse = 0.72 + (Math.sin(clock.elapsedTime * 4) + 1) * 0.14;
+    sparkleGroupRef.current.scale.setScalar(pulse);
+  });
+
   return (
     <group position={position} scale={0.82}>
       <mesh>
@@ -160,33 +169,109 @@ function AiIndicator({ position }: { position: [number, number, number] }) {
           depthWrite={false}
         />
       </mesh>
-      <mesh position={[-0.12, -0.01, 0.005]} scale={0.62}>
-        <shapeGeometry args={[sparkleShape]} />
-        <meshBasicMaterial
-          color="#ffffff"
-          transparent
-          opacity={0.9}
-          depthWrite={false}
-        />
-      </mesh>
-      <mesh position={[0, -0.01, 0.005]} scale={0.62}>
-        <shapeGeometry args={[sparkleShape]} />
-        <meshBasicMaterial
-          color="#ffffff"
-          transparent
-          opacity={0.9}
-          depthWrite={false}
-        />
-      </mesh>
-      <mesh position={[0.12, -0.01, 0.005]} scale={0.62}>
-        <shapeGeometry args={[sparkleShape]} />
-        <meshBasicMaterial
-          color="#ffffff"
-          transparent
-          opacity={0.9}
-          depthWrite={false}
-        />
-      </mesh>
+      <group ref={sparkleGroupRef}>
+        <mesh position={[-0.12, -0.01, 0.005]} scale={0.62}>
+          <shapeGeometry args={[sparkleShape]} />
+          <meshBasicMaterial
+            color="#ffffff"
+            transparent
+            opacity={0.9}
+            depthWrite={false}
+          />
+        </mesh>
+        <mesh position={[0, -0.01, 0.005]} scale={0.62}>
+          <shapeGeometry args={[sparkleShape]} />
+          <meshBasicMaterial
+            color="#ffffff"
+            transparent
+            opacity={0.9}
+            depthWrite={false}
+          />
+        </mesh>
+        <mesh position={[0.12, -0.01, 0.005]} scale={0.62}>
+          <shapeGeometry args={[sparkleShape]} />
+          <meshBasicMaterial
+            color="#ffffff"
+            transparent
+            opacity={0.9}
+            depthWrite={false}
+          />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+const ASK_ME_LETTERS = ["A", "S", "K", "M", "E"];
+const ASK_ME_LETTER_POSITIONS = [-0.28, -0.14, 0, 0.19, 0.34];
+const ASK_ME_REVEAL_MS = 280;
+const ASK_ME_HOLD_MS = 450;
+const ASK_ME_BLINK_MS = 200;
+const ASK_ME_FADE_MS = 500;
+const ASK_ME_CYCLE_MS =
+  ASK_ME_LETTERS.length * ASK_ME_REVEAL_MS +
+  ASK_ME_HOLD_MS +
+  ASK_ME_BLINK_MS * 6 +
+  ASK_ME_FADE_MS;
+
+function setTextOpacity(mesh: THREE.Mesh, opacity: number) {
+  const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+
+  for (const material of materials) {
+    material.transparent = true;
+    material.opacity = opacity;
+  }
+}
+
+function AnimatedAskMeText({ position }: { position: [number, number, number] }) {
+  const letterRefs = useRef<Array<THREE.Mesh | null>>([]);
+
+  useFrame(({ clock }) => {
+    const elapsedMs = (clock.elapsedTime * 1000) % ASK_ME_CYCLE_MS;
+    const revealEndMs = ASK_ME_LETTERS.length * ASK_ME_REVEAL_MS;
+    const blinkStartMs = revealEndMs + ASK_ME_HOLD_MS;
+    const fadeStartMs = blinkStartMs + ASK_ME_BLINK_MS * 6;
+
+    letterRefs.current.forEach((letter, index) => {
+      if (!letter) return;
+
+      let opacity = 0;
+      const letterStartMs = index * ASK_ME_REVEAL_MS;
+      const letterFadeProgress =
+        (elapsedMs - letterStartMs) / (ASK_ME_REVEAL_MS * 0.55);
+
+      if (elapsedMs >= letterStartMs && elapsedMs < revealEndMs) {
+        opacity = THREE.MathUtils.clamp(letterFadeProgress, 0, 1);
+      } else if (elapsedMs >= revealEndMs && elapsedMs < blinkStartMs) {
+        opacity = 1;
+      } else if (elapsedMs >= blinkStartMs && elapsedMs < fadeStartMs) {
+        opacity = Math.floor((elapsedMs - blinkStartMs) / ASK_ME_BLINK_MS) % 2 === 0 ? 1 : 0;
+      } else if (elapsedMs >= fadeStartMs) {
+        opacity = 1 - (elapsedMs - fadeStartMs) / ASK_ME_FADE_MS;
+      }
+
+      setTextOpacity(letter, opacity);
+    });
+  });
+
+  return (
+    <group position={position}>
+      {ASK_ME_LETTERS.map((letter, index) => (
+        <Text
+          key={letter}
+          ref={(mesh) => {
+            letterRefs.current[index] = mesh;
+          }}
+          position={[ASK_ME_LETTER_POSITIONS[index], 0, 0]}
+          font="/fonts/DesignRegular.woff"
+          color="#2ecaed"
+          fontSize={0.20}
+          anchorX="center"
+          anchorY="top"
+        >
+          {letter}
+        </Text>
+      ))}
     </group>
   );
 }
@@ -309,6 +394,7 @@ function GhostAsset({
       THREE.MathUtils.degToRad(-55),
       isScrolling ? 1 : 0,
     );
+    const targetRotationX = THREE.MathUtils.degToRad(isScrolling ? 10 : 0);
 
     groupRef.current.position.x = THREE.MathUtils.damp(
       groupRef.current.position.x,
@@ -325,6 +411,12 @@ function GhostAsset({
     groupRef.current.rotation.y = THREE.MathUtils.damp(
       groupRef.current.rotation.y,
       targetRotationY,
+      7,
+      delta,
+    );
+    groupRef.current.rotation.x = THREE.MathUtils.damp(
+      groupRef.current.rotation.x,
+      targetRotationX,
       7,
       delta,
     );
@@ -368,6 +460,9 @@ function GhostAsset({
           <boxGeometry args={[modelSize.x * 1.12, modelSize.y * 1.12, modelSize.z * 1.12]} />
           <meshBasicMaterial transparent opacity={0} depthWrite={false} />
         </mesh>
+        <AnimatedAskMeText
+          position={[modelCenter.x + 0.18, modelBounds.min.y - 0.15, modelCenter.z]}
+        />
       </group>
     </group>
   );
