@@ -62,10 +62,13 @@
   }
 }
 
-@media (max-width: 639px) {
+@media (max-width: 1023px) {
   .name {
     max-width: 100%;
   }
+}
+
+@media (max-width: 639px) {
   .actions {
     gap: 0.6rem;
   }
