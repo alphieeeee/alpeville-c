@@ -10,6 +10,7 @@
 }
 
 .card:hover {
+  border-color: #62dff4;
   border-color: color-mix(in srgb, var(--secondary) 75%, white);
   box-shadow: 0 22px 48px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(46, 202, 237, 0.18);
   transform: translateY(-0.35rem);

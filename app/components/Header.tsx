@@ -66,6 +66,31 @@ export default function Header({
       return;
     }
 
+    const updateActiveSection = () => {
+      const visibleSection = observers.find((element) => {
+        const bounds = element.getBoundingClientRect();
+        return (
+          bounds.top <= window.innerHeight * 0.65 &&
+          bounds.bottom >= window.innerHeight * 0.35
+        );
+      });
+
+      if (visibleSection) {
+        setActiveSection(`/#${visibleSection.id}`);
+      }
+    };
+
+    if (typeof IntersectionObserver === "undefined") {
+      updateActiveSection();
+      window.addEventListener("scroll", updateActiveSection, { passive: true });
+      window.addEventListener("resize", updateActiveSection);
+
+      return () => {
+        window.removeEventListener("scroll", updateActiveSection);
+        window.removeEventListener("resize", updateActiveSection);
+      };
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const visibleEntry = entries.find((entry) => entry.isIntersecting);

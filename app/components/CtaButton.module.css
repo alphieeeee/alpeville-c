@@ -24,6 +24,7 @@
 }
 
 .primary:hover {
+  background: #43d2ef;
   background: color-mix(in srgb, var(--secondary) 90%, white);
 }
 
