@@ -289,6 +289,7 @@ function GhostAsset({
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const headerHeightRef = useRef(0);
+  const isHoveredRef = useRef(false);
   const { viewport, size } = useThree();
   const model = useMemo(() => scene.clone(true), [scene]);
   const modelBounds = useMemo(() => new THREE.Box3().setFromObject(model), [model]);
@@ -389,12 +390,12 @@ function GhostAsset({
       scrolledScale,
       scrollProgress,
     );
-    const targetRotationY = THREE.MathUtils.lerp(
-      Math.PI / 12,
-      THREE.MathUtils.degToRad(-55),
-      isScrolling ? 1 : 0,
-    );
-    const targetRotationX = THREE.MathUtils.degToRad(isScrolling ? 10 : 0);
+    const isDesktopHovered = size.width >= 1024 && isHoveredRef.current;
+    const isLookingLeft = isScrolling || isDesktopHovered;
+    const targetRotationY = isLookingLeft
+      ? THREE.MathUtils.degToRad(-55)
+      : Math.PI / 12;
+    const targetRotationX = THREE.MathUtils.degToRad(isLookingLeft ? 10 : 0);
 
     groupRef.current.position.x = THREE.MathUtils.damp(
       groupRef.current.position.x,
@@ -442,16 +443,25 @@ function GhostAsset({
         />
         <mesh
           position={modelCenter.toArray()}
+          onPointerDown={(event) => {
+            event.stopPropagation();
+            event.nativeEvent.preventDefault();
+            event.nativeEvent.stopImmediatePropagation();
+          }}
           onPointerOver={(event) => {
             event.stopPropagation();
+            if (size.width >= 1024) isHoveredRef.current = true;
             document.body.style.cursor = "pointer";
           }}
           onPointerOut={(event) => {
             event.stopPropagation();
+            isHoveredRef.current = false;
             document.body.style.cursor = "";
           }}
           onClick={(event) => {
             event.stopPropagation();
+            event.nativeEvent.preventDefault();
+            event.nativeEvent.stopImmediatePropagation();
             document.body.style.cursor = "";
             onOpenAssistant();
           }}
