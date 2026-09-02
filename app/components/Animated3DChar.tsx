@@ -443,6 +443,11 @@ function GhostAsset({
         />
         <mesh
           position={modelCenter.toArray()}
+          onPointerDown={(event) => {
+            event.stopPropagation();
+            event.nativeEvent.preventDefault();
+            event.nativeEvent.stopImmediatePropagation();
+          }}
           onPointerOver={(event) => {
             event.stopPropagation();
             if (size.width >= 1024) isHoveredRef.current = true;
@@ -455,6 +460,8 @@ function GhostAsset({
           }}
           onClick={(event) => {
             event.stopPropagation();
+            event.nativeEvent.preventDefault();
+            event.nativeEvent.stopImmediatePropagation();
             document.body.style.cursor = "";
             onOpenAssistant();
           }}
