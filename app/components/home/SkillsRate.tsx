@@ -32,28 +32,38 @@ export default function SkillsRate({
     const section = sectionRef.current;
     if (!section || hasAnimatedRef.current) return;
 
+    const animateBars = () => {
+      if (hasAnimatedRef.current) return;
+
+      hasAnimatedRef.current = true;
+      barsRef.current.forEach((bar, index) => {
+        const percent = items[index]?.percent ?? 0;
+        if (!bar) return;
+
+        gsap.fromTo(
+          bar,
+          { width: "0%" },
+          {
+            width: `${Math.max(0, Math.min(percent, 100))}%`,
+            duration: 1.2,
+            ease: "back.out(1.5)",
+            delay: index * 0.12,
+          }
+        );
+      });
+    };
+
+    if (typeof IntersectionObserver === "undefined") {
+      animateBars();
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries.find((item) => item.isIntersecting);
         if (!entry) return;
 
-        hasAnimatedRef.current = true;
-        barsRef.current.forEach((bar, index) => {
-          const percent = items[index]?.percent ?? 0;
-          if (!bar) return;
-
-          gsap.fromTo(
-            bar,
-            { width: "0%" },
-            {
-              width: `${Math.max(0, Math.min(percent, 100))}%`,
-              duration: 1.2,
-              ease: "back.out(1.5)",
-              delay: index * 0.12,
-            }
-          );
-        });
-
+        animateBars();
         observer.disconnect();
       },
       { threshold: 0.25 }

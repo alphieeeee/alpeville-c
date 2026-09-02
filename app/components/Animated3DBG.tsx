@@ -358,12 +358,20 @@ function Scene() {
     const handlePointerLeave = () => targetPointer.current.set(0, 0);
 
     handleMotionPreference();
-    motionQuery.addEventListener("change", handleMotionPreference);
+    if (typeof motionQuery.addEventListener === "function") {
+      motionQuery.addEventListener("change", handleMotionPreference);
+    } else {
+      motionQuery.addListener(handleMotionPreference);
+    }
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     document.documentElement.addEventListener("pointerleave", handlePointerLeave);
 
     return () => {
-      motionQuery.removeEventListener("change", handleMotionPreference);
+      if (typeof motionQuery.removeEventListener === "function") {
+        motionQuery.removeEventListener("change", handleMotionPreference);
+      } else {
+        motionQuery.removeListener(handleMotionPreference);
+      }
       window.removeEventListener("pointermove", handlePointerMove);
       document.documentElement.removeEventListener("pointerleave", handlePointerLeave);
     };
@@ -417,6 +425,7 @@ export default function Animated3DBGv3({
       className={`pointer-events-none fixed inset-0 -z-10 h-full w-full overflow-hidden bg-[#15141b] ${className}`.trim()}
     >
       <Canvas
+        fallback={null}
         dpr={[1, 1.25]}
         camera={{ position: [0, 2.2, 9.5], fov: 48, near: 0.1, far: 50 }}
         gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
