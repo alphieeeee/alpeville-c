@@ -133,6 +133,18 @@ const workData: WorkCard[] = [
     tools: ["Next.js", "Tailwind CSS", "GSAP", "AI tools", "Firebase", "Rest APIs"],
     link: "https://infinite-verse.vercel.app/",
   },
+  {
+    slug: "alpeville-c",
+    title: "Alpeville C",
+    type: "AI-Augmented Web Development",
+    thumbSrc: "/assets/thumbs/alpeville-c.png",
+    thumbAlt: "Alpeville C project preview",
+    imgSrc: "/assets/projects/alpeville-c.png",
+    imgAlt: "Alpeville C portfolio project with 3D AI assistant",
+    summary: "A portfolio project for Alpeville, showcasing his work, experience, and tech stack through an interactive web experience, featuring a 3D AI assistant that helps users explore and learn more about his professional background.",
+    tools: ["Next.js", "Tailwind CSS", "GSAP", "React Three Fibre", "Three.js", "Meshy AI", "AI tools", "OpenAI Api", "PostgreSQL", "Strapi"],
+    link: "https://alpeville-c.vercel.app/",
+  },
 ];
 
 export default workData;
