@@ -5,6 +5,7 @@
 
 .meta {
   margin-bottom: 0.75rem;
+  color: #4dd6f0;
   color: color-mix(in srgb, var(--secondary) 85%, white);
   font-size: 0.75rem;
   font-weight: 500;

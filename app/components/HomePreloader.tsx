@@ -57,6 +57,7 @@ export default function HomePreloader() {
   useEffect(() => {
     if (!isVisible) return;
 
+    document.documentElement.classList.add("preloader-active");
     const previousDocumentOverflow = document.documentElement.style.overflow;
     const previousBodyOverflow = document.body.style.overflow;
     const preventScroll = (event: Event) => event.preventDefault();
@@ -73,6 +74,7 @@ export default function HomePreloader() {
     window.addEventListener("keydown", preventKeyboardScroll, { capture: true });
 
     return () => {
+      document.documentElement.classList.remove("preloader-active");
       document.documentElement.style.overflow = previousDocumentOverflow;
       document.body.style.overflow = previousBodyOverflow;
       window.removeEventListener("wheel", preventScroll, true);

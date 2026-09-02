@@ -16,6 +16,12 @@
   filter: none;
 }
 
+.canvasFallback {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
 @media (max-width: 639px) {
   .canvas {
     opacity: 0.92;
