@@ -138,7 +138,7 @@ const workData: WorkCard[] = [
     title: "Alpeville C",
     type: "AI-Augmented Web Development",
     thumbSrc: "/assets/thumbs/alpeville-c.png",
-    thumbAlt: "Alpeville C project preview",
+    thumbAlt: "Alpeville C portfolio preview",
     imgSrc: "/assets/projects/alpeville-c.png",
     imgAlt: "Alpeville C portfolio project with 3D AI assistant",
     summary: "A portfolio project for Alpeville, showcasing his work, experience, and tech stack through an interactive web experience, featuring a 3D AI assistant that helps users explore and learn more about his professional background.",
