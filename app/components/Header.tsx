@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ComponentPropsWithoutRef } from "react";
+import { useEffect, useState, type ComponentPropsWithoutRef, type MouseEvent } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
@@ -50,6 +50,14 @@ export default function Header({
   const activeHref = pathname === "/" ? activeSection : pathname;
 
   useLockBodyScroll(isMenuOpen);
+
+  useEffect(() => {
+    document.body.dataset.mobileNavOpen = String(isMenuOpen);
+
+    return () => {
+      delete document.body.dataset.mobileNavOpen;
+    };
+  }, [isMenuOpen]);
 
   useEffect(() => {
     if (pathname !== "/") return;
@@ -149,7 +157,8 @@ export default function Header({
     return () => window.cancelAnimationFrame(frame);
   }, [pathname]);
 
-  const handleNavigate = (itemIndex: number) => {
+  const handleNavigate = (itemIndex: number, event?: MouseEvent<HTMLButtonElement>) => {
+    event?.stopPropagation();
     const item = navItems[itemIndex];
     setIsMenuOpen(false);
 
@@ -180,7 +189,7 @@ export default function Header({
       style={style}
       onPointerDown={(event) => event.stopPropagation()}
       onClick={(event) => event.stopPropagation()}
-      className={`fixed top-0 w-full z-50 ${
+      className={`fixed top-0 z-[100] w-full ${
         isScrolled && !isMenuOpen
           ? "glass-shell bg-background/55 shadow-[0_16px_48px_rgba(0,0,0,0.22)]"
           : ""
@@ -195,7 +204,7 @@ export default function Header({
           isOpen={isMenuOpen}
           activeHref={activeHref}
           onToggle={() => setIsMenuOpen((value) => !value)}
-          onNavigate={(item) => handleNavigate(navItems.indexOf(item))}
+          onNavigate={(item, event) => handleNavigate(navItems.indexOf(item), event)}
         />
       </div>
       {children}

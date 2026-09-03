@@ -453,11 +453,12 @@ function GhostAsset({
           position={modelCenter.toArray()}
           onPointerDown={(event) => {
             event.stopPropagation();
-            event.nativeEvent.preventDefault();
+            if (document.body.dataset.mobileNavOpen === "true") return;
             event.nativeEvent.stopImmediatePropagation();
           }}
           onPointerOver={(event) => {
             event.stopPropagation();
+            if (document.body.dataset.mobileNavOpen === "true") return;
             if (size.width >= 1024) isHoveredRef.current = true;
             document.body.style.cursor = "pointer";
           }}
@@ -468,7 +469,7 @@ function GhostAsset({
           }}
           onClick={(event) => {
             event.stopPropagation();
-            event.nativeEvent.preventDefault();
+            if (document.body.dataset.mobileNavOpen === "true") return;
             event.nativeEvent.stopImmediatePropagation();
             document.body.style.cursor = "";
             onOpenAssistant();
