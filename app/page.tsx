@@ -39,7 +39,7 @@ export default async function Home() {
     return (
       <>
         <HomePreloader />
-        <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
+        <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-5 sm:px-10">
           <ErrorState message={heroResult.error.message} retryHref="/" />
         </main>
       </>
@@ -49,7 +49,7 @@ export default async function Home() {
   return (
     <>
       <HomePreloader />
-      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-5 sm:px-10">
       <HomeHero id="home" heroData={heroResult.data} />
 
       {aboutResult.data ? (

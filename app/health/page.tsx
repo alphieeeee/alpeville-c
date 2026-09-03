@@ -14,7 +14,7 @@ export default async function HealthPage() {
   const data = await checkStrapiHealth();
 
   return (
-    <main className="mx-auto flex w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+    <main className="mx-auto flex w-full max-w-7xl flex-1 px-5 py-10 sm:px-10">
       <section className="glass-surface w-full rounded-3xl p-8">
         <p className="mb-3 text-sm font-medium uppercase tracking-[0.3em] text-secondary">
           Health Check

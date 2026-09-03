@@ -29,7 +29,7 @@ export default async function CVPage() {
 
   if (error || !cvData) {
     return (
-      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-5 sm:px-10">
         <CtaButton href="/" variant="secondary">
           Back
         </CtaButton>
@@ -44,7 +44,7 @@ export default async function CVPage() {
   const { hero, roles, skills, highlights, education, achievements } = cvData;
 
   return (
-    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-10">
+    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-5 sm:px-10">
       <div>
         <AnimPanning
           duration={0.4}

@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithoutRef, MouseEvent } from "react";
 import { navItems } from "../data/navigation";
 import type { NavItem } from "../types/navigation";
 
 type MobileNavProps = {
   isOpen: boolean;
   onToggle: () => void;
-  onNavigate: (item: NavItem) => void;
+  onNavigate: (item: NavItem, event: MouseEvent<HTMLButtonElement>) => void;
   activeHref: string;
 } & ComponentPropsWithoutRef<"div">;
 
@@ -39,7 +39,7 @@ export default function MobileNav({
 
       <button
         type="button"
-        className="z-50 inline-flex cursor-pointer items-center justify-center rounded-full border border-border bg-background/30 p-3 text-foreground transition-colors hover:border-secondary hover:text-secondary"
+        className="z-[120] inline-flex cursor-pointer items-center justify-center rounded-full border border-border bg-background/30 p-3 text-foreground transition-colors hover:border-secondary hover:text-secondary"
         aria-label="Toggle navigation menu"
         aria-expanded={isOpen}
         onClick={onToggle}
@@ -64,8 +64,8 @@ export default function MobileNav({
       </button>
 
       <div
-        className={`fixed inset-0 z-40 transition-opacity duration-300 lg:hidden ${
-          isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        className={`fixed inset-0 z-[110] transition-opacity duration-300 lg:hidden ${
+          isOpen ? "opacity-100" : "opacity-0"
         }`}
       >
         <button
@@ -88,8 +88,8 @@ export default function MobileNav({
                 key={item.href}
                 type="button"
                 aria-current={activeHref === item.href ? "page" : undefined}
-                onClick={() => onNavigate(item)}
-                className={`cursor-pointer text-lg font-medium transition-colors ${
+                onClick={(event) => onNavigate(item, event)}
+                className={`cursor-pointer text-lg font-medium transition-colors pointer-events-auto ${
                   activeHref === item.href
                     ? "text-secondary"
                     : "text-foreground/85 hover:text-secondary"
