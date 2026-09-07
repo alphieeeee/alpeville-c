@@ -553,7 +553,7 @@ export default function Animated3DChar() {
         eventPrefix="client"
         aria-hidden="true"
         fallback={<div className={styles.canvasFallback} aria-hidden="true" />}
-        dpr={[1, 1.5]}
+        dpr={[1, 1]}
         camera={{ position: [0, 0, 5], fov: 36, near: 0.1, far: 30 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >

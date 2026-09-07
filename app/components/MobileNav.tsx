@@ -65,7 +65,7 @@ export default function MobileNav({
 
       <div
         className={`fixed inset-0 z-[110] transition-opacity duration-300 lg:hidden ${
-          isOpen ? "opacity-100" : "opacity-0"
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
         <button
