@@ -1,0 +1,7 @@
+.content { max-width: 48rem; padding: 2rem 0 5rem; }
+.eyebrow { margin: 0 0 1rem; color: var(--secondary); font-family: "DesignRegular", Arial, Helvetica, sans-serif; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.content h1 { max-width: 42rem; margin: 0 0 2rem; font-size: var(--heading-size); line-height: 0.95; }
+.content p:not(.eyebrow) { max-width: 42rem; margin: 0 0 1.25rem; color: color-mix(in srgb, var(--foreground) 78%, transparent); font-size: clamp(1rem, 1.6vw, 1.2rem); line-height: 1.7; }
+.content .muted { color: color-mix(in srgb, var(--foreground) 55%, transparent); font-size: 0.95rem; }
+.backLink { display: inline-block; color: var(--secondary); font-family: "DesignRegular", Arial, Helvetica, sans-serif; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; transition: color 180ms ease; }
+.backLink:hover, .backLink:focus-visible { color: var(--foreground); }
