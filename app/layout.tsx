@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import TransitionLayout from "./components/gsap/TransitionLayout";
 import Header from "./components/Header";
-import Animated3DBG from "./components/Animated3DBG";
+import Responsive3DBG from "./components/Responsive3DBG";
 import RouteAnimated3DChar from "./components/RouteAnimated3DChar";
 // import ScrollProgressBar from "./components/ScrollProgressBar";
 
@@ -55,7 +55,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full bg-background text-foreground flex flex-col">
-        <Animated3DBG />
+        <Responsive3DBG />
         {/* <ScrollProgressBar /> */}
         <Header />
         <RouteAnimated3DChar />
