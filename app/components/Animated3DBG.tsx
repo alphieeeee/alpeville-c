@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, type ComponentPropsWithoutRef, type RefObject } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import styles from "./Animated3DBG.module.css";
 
 const BACKGROUND = "#15141b";
 const INDIGO = "#6e56d9";
@@ -422,19 +423,19 @@ export default function Animated3DBGv3({
       id={id}
       style={style}
       aria-hidden="true"
-      className={`pointer-events-none fixed inset-0 -z-10 h-full w-full overflow-hidden bg-[#15141b] ${className}`.trim()}
+      className={`${styles.background} ${className}`.trim()}
     >
       <Canvas
         fallback={null}
         dpr={[1, 1.25]}
         camera={{ position: [0, 2.2, 9.5], fov: 48, near: 0.1, far: 50 }}
         gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
-        style={{ position: "absolute", inset: 0 }}
+        className={styles.canvas}
       >
         <Scene />
       </Canvas>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_25%,rgba(110,86,217,0.11),transparent_45%),linear-gradient(180deg,rgba(21,20,27,0.04),rgba(21,20,27,0.16)_58%,rgba(21,20,27,0.64))]" />
-      <div className="absolute inset-0 opacity-[0.025] [background-image:repeating-linear-gradient(0deg,transparent,transparent_3px,#927cff_4px)]" />
+      <div className={styles.glow} />
+      <div className={styles.scanlines} />
       {children}
     </div>
   );
