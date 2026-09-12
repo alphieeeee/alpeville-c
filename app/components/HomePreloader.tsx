@@ -7,12 +7,14 @@ import styles from "./HomePreloader.module.css";
 
 const MINIMUM_DISPLAY_MS = 700;
 const PROGRESS_TICK_MS = 40;
+const MAX_LOADING_WAIT_MS = 10000;
 
 export default function HomePreloader() {
   const { progress } = useProgress();
   const [isVisible, setIsVisible] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
   const [hasMinimumTimePassed, setHasMinimumTimePassed] = useState(false);
+  const [hasLoadingTimedOut, setHasLoadingTimedOut] = useState(false);
   const [visualProgress, setVisualProgress] = useState(0);
   const actualProgress = Math.min(Math.max(progress, 0), 100);
   const percentage = Math.round(visualProgress);
@@ -21,6 +23,15 @@ export default function HomePreloader() {
     const frame = window.requestAnimationFrame(() => setIsMounted(true));
 
     return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(
+      () => setHasLoadingTimedOut(true),
+      MAX_LOADING_WAIT_MS,
+    );
+
+    return () => window.clearTimeout(timeout);
   }, []);
 
   useEffect(() => {
@@ -34,7 +45,9 @@ export default function HomePreloader() {
 
   useEffect(() => {
     const targetProgress =
-      actualProgress >= 100 ? 100 : Math.min(Math.max(actualProgress, 8), 92);
+      actualProgress >= 100 || hasLoadingTimedOut
+        ? 100
+        : Math.min(Math.max(actualProgress, 8), 92);
     const interval = window.setInterval(() => {
       setVisualProgress((currentProgress) => {
         if (currentProgress >= targetProgress) return currentProgress;
@@ -45,7 +58,7 @@ export default function HomePreloader() {
     }, PROGRESS_TICK_MS);
 
     return () => window.clearInterval(interval);
-  }, [actualProgress]);
+  }, [actualProgress, hasLoadingTimedOut]);
 
   useEffect(() => {
     if (visualProgress < 100 || !hasMinimumTimePassed) return;
