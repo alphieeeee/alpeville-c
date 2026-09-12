@@ -1,0 +1,20 @@
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(110, 86, 217, 0.11), transparent 45%),
+    #15141b;
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, #927cff 4px);
+}
