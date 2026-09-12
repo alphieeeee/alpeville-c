@@ -89,6 +89,7 @@ export default function HomeHero({
                 key={cta.href}
                 href={cta.href}
                 variant={cta.variant ?? "primary"}
+                className={`text-center`}
               >
                 {cta.label}
               </CtaButton>
