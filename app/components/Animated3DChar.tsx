@@ -553,9 +553,9 @@ export default function Animated3DChar() {
         eventPrefix="client"
         aria-hidden="true"
         fallback={<div className={styles.canvasFallback} aria-hidden="true" />}
-        dpr={[1, 1]}
+        dpr={1}
         camera={{ position: [0, 0, 5], fov: 36, near: 0.1, far: 30 }}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        gl={{ antialias: false, alpha: true, powerPreference: "low-power" }}
       >
         <ambientLight intensity={1.8} color="#ffffff" />
         <GhostModel
@@ -571,5 +571,3 @@ export default function Animated3DChar() {
     </div>
   );
 }
-
-useGLTF.preload(BOO_ASSET);
